@@ -1,0 +1,30 @@
+{
+  "topic": "Edge Detection in Noisy Images Using 2D Filtering",
+  "primary_demo_image": "camera",
+  "artifacts": [
+    "assets/generated/figures/image_gallery.png",
+    "assets/generated/figures/camera_pipeline.png",
+    "assets/generated/figures/coins_pipeline.png",
+    "assets/generated/figures/astronaut_pipeline.png",
+    "assets/generated/figures/synthetic_pipeline.png",
+    "assets/generated/figures/sobel_kernels.png",
+    "assets/generated/figures/tradeoff_heatmap.png",
+    "assets/generated/data/tradeoff_metrics.csv"
+  ],
+  "noise_levels": [
+    0.02,
+    0.05,
+    0.08,
+    0.12,
+    0.18,
+    0.24
+  ],
+  "smoothing_sigmas": [
+    0.0,
+    0.6,
+    1.0,
+    1.4,
+    1.8,
+    2.4
+  ]
+}
