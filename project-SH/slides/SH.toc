@@ -1,0 +1,5 @@
+\beamer@sectionintoc {1}{Background}{3}{0}{1}
+\beamer@sectionintoc {2}{Spherical Harmonics}{10}{0}{2}
+\beamer@sectionintoc {3}{Directional Color as a Visual Signal}{16}{0}{3}
+\beamer@sectionintoc {4}{Application in 3D Gaussian Splatting}{20}{0}{4}
+\beamer@sectionintoc {5}{Demo and Evaluation}{26}{0}{5}

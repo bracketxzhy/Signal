@@ -42,21 +42,20 @@ def save_pipeline_panel(
 
 
 def save_sobel_kernel_panel(path: Path, kernel_x: np.ndarray, kernel_y: np.ndarray) -> Path:
-    fig, axes = plt.subplots(1, 2, figsize=(8, 3.8))
+    fig, axes = plt.subplots(2, 1, figsize=(4.2, 6.2))
     for axis, matrix, title in zip(
         axes,
         (kernel_x, kernel_y),
         ("Horizontal-change kernel", "Vertical-change kernel"),
     ):
         image = axis.imshow(matrix, cmap="coolwarm")
-        axis.set_title(title, fontsize=12)
+        axis.set_title(title, fontsize=11)
         axis.set_xticks(range(3))
         axis.set_yticks(range(3))
         for row in range(matrix.shape[0]):
             for col in range(matrix.shape[1]):
                 axis.text(col, row, f"{matrix[row, col]:.0f}", ha="center", va="center")
         fig.colorbar(image, ax=axis, fraction=0.046, pad=0.04)
-    fig.suptitle("Sobel kernels implement 2D convolutional derivatives", fontsize=15, weight="bold")
     fig.tight_layout()
     return _save(fig, path)
 

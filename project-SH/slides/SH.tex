@@ -1,0 +1,670 @@
+\documentclass[aspectratio=169,10pt]{beamer}
+
+\usefonttheme{professionalfonts}
+\setbeamertemplate{navigation symbols}{}
+
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{hyperref}
+\usepackage{amsmath}
+\usepackage{bm}
+\usepackage{ragged2e}
+\usepackage{xcolor}
+\usepackage{array}
+\usepackage{subcaption}
+
+\definecolor{SCUGreen}{RGB}{8,79,52}
+\definecolor{SCULight}{RGB}{223,233,227}
+\definecolor{SCUDot}{RGB}{35,137,79}
+\definecolor{SCUText}{RGB}{41,63,70}
+
+\setbeamercolor{background canvas}{bg=white}
+\setbeamercolor{normal text}{fg=SCUText,bg=white}
+\setbeamercolor{title}{fg=SCUGreen}
+\setbeamercolor{subtitle}{fg=SCUGreen}
+\setbeamercolor{frametitle}{fg=SCUGreen,bg=SCULight}
+\setbeamercolor{itemize item}{fg=SCUDot}
+\setbeamercolor{itemize subitem}{fg=SCUDot}
+\setbeamercolor{enumerate item}{fg=SCUDot}
+
+\setbeamerfont{title}{size=\Large,series=\bfseries}
+\setbeamerfont{subtitle}{size=\large}
+\setbeamerfont{frametitle}{size=\large,series=\bfseries}
+\setbeamerfont{normal text}{size=\normalsize}
+
+\setbeamertemplate{footline}{}
+\setbeamertemplate{headline}{}
+\setbeamersize{text margin left=1.15cm,text margin right=1.15cm}
+\setlength{\leftmargini}{1.2em}
+\setlength{\leftmarginii}{1.15em}
+\setbeamertemplate{itemize item}{\color{SCUDot}\small$\bullet$}
+\setbeamertemplate{itemize subitem}{\color{SCUDot}\scriptsize$\bullet$}
+\setbeamertemplate{itemize subsubitem}{\color{SCUDot}\tiny$\bullet$}
+\setbeamertemplate{frametitle}{
+  \nointerlineskip
+  \begin{beamercolorbox}[wd=\paperwidth,ht=3.1ex,dp=1.1ex,leftskip=1.1em]{frametitle}
+    \usebeamerfont{frametitle}\insertframetitle
+  \end{beamercolorbox}
+}
+
+\newcommand{\pipelinebox}[1]{
+  \begin{beamercolorbox}[wd=\linewidth,sep=0.8em,rounded=true,center]{frametitle}
+    \color{SCUGreen}\bfseries #1
+  \end{beamercolorbox}
+}
+
+\newcommand{\sectiondivider}[2]{
+  \begin{frame}[plain]
+    \vspace{1.75cm}
+    {\color{SCUGreen}\bfseries\fontsize{15.2}{18}\selectfont #1\par}
+    \vspace{0.42cm}
+    {\color{SCUGreen}\fontsize{13.2}{15.6}\selectfont #2\par}
+    \vspace{0.28cm}
+    {\color{SCUGreen}\rule{0.92\linewidth}{0.55pt}\par}
+    \vfill
+  \end{frame}
+}
+
+\newcommand{\imageorplaceholder}[2]{
+  \IfFileExists{#1}{
+    \includegraphics[width=\linewidth,height=#2,keepaspectratio]{#1}
+  }{
+    \fbox{
+      \parbox[c][#2][c]{0.92\linewidth}{
+        \centering
+        \textbf{Placeholder}\\[0.4em]
+        \path{#1}
+      }
+    }
+  }
+}
+
+\title{From Fourier Series to Spherical Harmonics}
+\subtitle{View-Dependent Appearance in 3D Gaussian Splatting $\left( 2026/06/03 \right)$}
+\author{Heyang (Stefan) Zhang}
+\institute{Sichuan University - Pittsburgh Institute}
+\date{}
+
+\begin{document}
+
+\begin{frame}[plain]
+  \vspace{1.55cm}
+  {\color{SCUGreen}\bfseries\fontsize{15.2}{18}\selectfont \inserttitle\par}
+  \vspace{0.42cm}
+  {\color{SCUGreen}\fontsize{13.2}{15.6}\selectfont \insertsubtitle\par}
+  \vspace{0.28cm}
+  {\color{SCUGreen}\rule{0.96\linewidth}{0.55pt}\par}
+  \vfill
+  {\centering\fontsize{11.8}{14}\selectfont \insertauthor\par}
+  \vspace{0.75cm}
+  {\centering\fontsize{11}{13}\selectfont \insertinstitute\par}
+  \vspace{1.15cm}
+\end{frame}
+
+\begin{frame}[t]{Contents}
+  \large
+  \vspace{1.5cm}
+  \begin{itemize}
+    \item Section I: Background and Fundamental Theory
+    \item Section II:  Spherical Harmonics
+    \item Section III: Directional Color as a Visual Signal
+    \item Section IV: Application in 3D Gaussian Splatting
+    \item Section V: Demo and Evaluation
+    \item Conclusion
+  \end{itemize}
+\end{frame}
+
+\section{Background}
+\sectiondivider{Section I: Background and Fundamental Theory}{From ordinary signals to basis-function expansions}
+
+\begin{frame}[t]{Background}
+  \justifying
+\begin{itemize}
+  \item Fourier analysis originated from the study of heat transfer in the early 19th century.
+  \item Joseph Fourier proposed that complex periodic signals could be represented by sums of simple sine and cosine waves.
+  \item This idea later became a foundation of signal processing, communication systems, image analysis, and modern visual computing.
+  \item The core insight is simple: complicated signals can be decomposed into simpler basis functions.
+\end{itemize}
+
+  \vspace{6.75em}
+  \pipelinebox{Complex Signal $\rightarrow$ Sine and Cosine Bases $\rightarrow$ Frequency Coefficients}
+\end{frame}
+
+\begin{frame}{Fourier Series}
+A periodic signal can be represented as a weighted sum of sine and cosine functions:
+
+\[
+f(x)=a_0+\sum_{n=1}^{\infty}
+\left(a_n\cos(nx)+b_n\sin(nx)\right)
+\]
+
+where:
+\begin{itemize}
+  \item $a_0$ represents the average level of the signal.
+  \item $a_n$ and $b_n$ are Fourier coefficients.
+  \item $\cos(nx)$ and $\sin(nx)$ are basis functions.
+  \item $n$ controls the frequency of each component.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}[t]{Approximating a Signal by Increasing $n$}
+  \justifying
+  \begin{columns}[T]
+    \column{0.25\linewidth}
+\begin{itemize}
+  \item Using only low-frequency terms gives a rough and smooth approximation.
+  \item Adding more terms allows the representation to capture sharper changes and finer details.
+\end{itemize}
+    \column{0.75\linewidth}
+    \begin{figure}
+    \centering
+    \imageorplaceholder{figures/fourier_square_wave_approx.png}{0.86\textheight}
+    \caption{Square-wave approximation with increasing Fourier terms}
+    \end{figure}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[t]{Fourier Ideas in 2D Images}
+  \justifying
+  \begin{columns}[T]
+    \column{0.5\linewidth}
+\begin{itemize}
+  \item For object boundaries, a closed contour can also be represented in polar form:
+  \[
+  r=r(\theta)
+  \]
+  \item Then Fourier series can approximate this boundary by adding more frequency components.
+\end{itemize}
+
+    \column{0.5\linewidth}
+    \begin{figure}
+    \centering
+    \imageorplaceholder{figures/polar_dumbbell_r_costheta.png}{0.7\textheight}
+    \caption{A dumbbell-shape in polar coordinates}
+    \end{figure}
+  \end{columns}
+\end{frame}
+
+% =========================
+% Section I - Extra Page
+% =========================
+\begin{frame}{Two-Variable Fourier Series}
+A two-variable signal can be written as:
+\[
+z=f(x,y)
+\]
+
+where $x$ and $y$ are spatial coordinates, and $z$ is the signal value or surface height.
+
+For a periodic 2D signal, the Fourier series can be written as:
+
+\[
+f(x,y)
+=
+\sum_{m=-M}^{M}
+\sum_{n=-N}^{N}
+c_{mn}
+e^{j(mx+ny)}
+\]
+
+Equivalently, it can be expressed using sine and cosine terms:
+
+\[
+\begin{aligned}
+f(x,y)\approx
+\sum_{m=0}^{M}\sum_{n=0}^{N}
+\big[
+ A_{mn}\cos(mx)\cos(ny) 
++ B_{mn}\cos(mx)\sin(ny) \\
++ C_{mn}\sin(mx)\cos(ny) 
++ D_{mn}\sin(mx)\sin(ny)
+\big]
+\end{aligned}
+\]
+\end{frame}
+
+ \begin{frame}{Two-Variable Fourier Series for Surface Signals}
+\begin{columns}
+\column{0.5\textwidth}
+\begin{center}
+\begin{figure}
+\centering
+\imageorplaceholder{figures/two_variable_surface.png}{1\textheight}
+\caption{Two-variable surface signal}
+\end{figure}
+\end{center}
+\column{0.5\textwidth}
+\begin{center}
+\begin{figure}
+\centering
+\imageorplaceholder{figures/two_variable_fit_grid.png}{1\textheight}
+\caption{Increasing 2D Fourier terms}
+\end{figure}
+\end{center}
+\end{columns}
+ \end{frame}
+
+
+
+\section{Spherical Harmonics}
+\sectiondivider{Section II: Spherical Harmonics}{Extending Fourier representation from a plane to a sphere}
+
+
+
+\begin{frame}{Fourier-Like Expansion in Spherical Coordinates}
+  \justifying
+\begin{columns}
+\column{0.5\textwidth}
+In spherical coordinates, a 3D surface can be described by a radius function:
+\[
+r=r(\theta,\phi)
+\]
+where:
+\begin{itemize}
+  \item $r$ is the distance from the origin.
+  \item $\theta$ is the polar angle.
+  \item $\phi$ is the azimuth angle.
+\end{itemize}
+The corresponding Cartesian coordinates are:
+\[
+x=r(\theta,\phi)\sin\theta\cos\phi
+\]
+\[
+y=r(\theta,\phi)\sin\theta\sin\phi
+\]
+\[
+z=r(\theta,\phi)\cos\theta
+\]
+    \column{0.4\linewidth}
+    \begin{figure}
+    \centering
+    \imageorplaceholder{figures/spherical_coordinates.png}{0.68\textheight}
+    \caption{Spherical coordinates with radius, polar angle, and azimuth angle}
+    \end{figure}
+  \end{columns}
+  \end{frame}
+
+
+
+\begin{frame}{Fourier-Like Expansion in Spherical Coordinates}
+\justifying
+    
+Therefore, the basis expansion changes its domain from a plane to a sphere.
+
+For a 2D signal on a plane:
+\[
+f(x,y)\approx
+\sum_{m=-M}^{M}
+\sum_{n=-N}^{N}
+c_{mn}\Phi_{mn}(x,y)
+\]
+
+
+For a directional signal on a sphere:
+
+\[
+r(\theta,\phi)
+=
+\sum_{l=0}^{L}\sum_{m=-l}^{l}
+c_l^m Y_l^m(\theta,\phi)
+\]
+
+where:
+\begin{itemize}
+  \item $l$ is the degree, controlling the frequency level.
+  \item $m$ is the order, controlling angular variation.
+  \item $Y_l^m(\theta,\phi)$ is a spherical harmonic basis function.
+  \item $c_l^m$ is the spherical harmonic coefficient.
+\end{itemize}
+
+\end{frame}
+
+\begin{frame}{Spherical Harmonics and SH Coefficients}
+\begin{columns}
+\column{0.5\textwidth}
+Spherical harmonics are basis functions defined on the sphere:
+\[
+Y_l^m(\theta,\phi)
+\]
+\small
+\[
+Y_l^m(\theta,\varphi)=
+\begin{cases}
+\sqrt{2}\,K_l^m\cos(m\varphi)\,P_l^m(\cos\theta),
+& m>0\\[0.6em]
+\sqrt{2}\,K_l^m\sin(-m\varphi)\,P_l^{-m}(\cos\theta),
+& m<0\\[0.6em]
+K_l^0P_l^0(\cos\theta),
+& m=0
+\end{cases}
+\]
+\[
+P_n(x)=
+\frac{1}{2^n n!}
+\frac{d^n}{dx^n}
+\left[
+(x^2-1)^n
+\right]
+\]
+\[
+P_l^m(x)=
+(-1)^m(1-x^2)^{m/2}
+\frac{d^m}{dx^m}
+\left(
+P_l(x)
+\right)
+\]
+
+\[
+K_l^m=
+\sqrt{
+\frac{(2l+1)}{4\pi}
+\frac{(l-|m|)!}{(l+|m|)!}
+}
+\]
+\column{0.5\textwidth}
+
+\begin{center}
+\begin{figure}
+\centering
+\imageorplaceholder{figures/sh_basis_grid.png}{0.58\textheight}
+\caption{SH basis functions arranged by degree $L$}
+\end{figure}
+\end{center}
+\end{columns}
+\end{frame}
+
+
+\begin{frame}{Spherical Harmonics and SH Coefficients}
+
+The coefficient measures how much each basis function contributes:
+
+\[
+c_l^m
+=
+\int_{0}^{2\pi}
+\int_{0}^{\pi}
+f(\theta,\phi)
+\overline{Y_l^m(\theta,\phi)}
+\sin\theta
+\,d\theta\,d\phi
+\]
+\vspace{2.2em}
+\begin{center}
+\begin{figure}
+\centering
+\imageorplaceholder{figures/sh_coefficient_projection.png}{0.3\textheight}
+\caption{A signal reconstructed as weighted SH basis functions}
+\end{figure}
+\end{center}
+\end{frame}
+
+\begin{frame}{Increasing SH Degree Improves Approximation}
+\begin{center}
+\begin{figure}
+\centering
+\imageorplaceholder{figures/sh_approximation_grid.png}{0.8\textheight}
+\caption{Higher SH degree captures finer angular detail}
+\end{figure}
+\end{center}
+\end{frame}
+
+
+
+\section{Directional Color as a Visual Signal}
+\sectiondivider{Section III: Directional Color as a Visual Signal}{From color values to signal representation}
+
+\begin{frame}{Color Can Be Represented as a Signal}
+\begin{columns}
+\column{0.52\textwidth}
+
+\begin{itemize}
+  \item Color is not only a visual property. It can also be treated as a measurable signal.
+  \item For a fixed image point, the color value can be written as:
+  \[
+  C = (R,G,B)
+  \]
+  \item If color changes with position, it becomes a spatial signal:
+  \[
+  C(x,y) = \big(R(x,y),G(x,y),B(x,y)\big)
+  \]
+  \item If color changes with viewing direction, it becomes a directional signal:
+  \[
+  C(\theta,\phi)
+  \]
+\end{itemize}
+
+
+\column{0.43\textwidth}
+
+\begin{figure}
+\centering
+\imageorplaceholder{figures/color_as_signal_grayscale.png}{0.52\textheight}
+\caption{Gray values represented as a signal}
+\end{figure}
+
+\end{columns}
+\end{frame}
+
+\begin{frame}{From Directional Distance to Color Signal}
+
+\begin{columns}
+\column{0.45\textwidth}
+\begin{center}
+\begin{figure}
+\centering
+\imageorplaceholder{figures/directional_distance_signal_custom.png}{0.9\textheight}
+\caption{Directional distance signal}
+\end{figure}
+\end{center}
+\column{0.1\textwidth}
+\begin{center}
+\hspace{0.5cm}
+$\Longrightarrow$
+\hspace{0.5cm}
+\end{center}
+\column{0.45\textwidth}
+\begin{center}
+\begin{figure}
+\centering
+\imageorplaceholder{figures/color_mapped_directional_signal.png}{0.9\textheight}
+\caption{Color-mapped signal on the sphere}
+\end{figure}
+\end{center}
+\end{columns}
+\end{frame}
+
+\begin{frame}{Multi-Channel Signals and Directional Anisotropy}
+\begin{columns}
+\column{0.40\textwidth}
+\begin{itemize}
+  \item Color can be represented by three directional channels:
+  \[
+  C(\theta,\phi)
+  =
+  \big(
+  R(\theta,\phi),
+  G(\theta,\phi),
+  B(\theta,\phi)
+  \big)
+  \]
+  \item Brightness, transparency, and other visual attributes can also be modeled as signals:
+  \[
+  I(\theta,\phi),\quad
+  \alpha(\theta,\phi)
+  \]
+  \item If a property changes with direction, it is anisotropic.
+\end{itemize}
+
+\column{0.6\textwidth}
+\begin{figure}
+\centering
+\imageorplaceholder{figures/multichannel_directional_signal_custom.png}{1\textheight}
+\caption{\scriptsize RGB, brightness, and opacity as directional signals}
+\end{figure}
+
+\end{columns}
+\end{frame}
+
+
+
+\section{Application in 3D Gaussian Splatting}
+\sectiondivider{Section IV: Application in 3D Gaussian Splatting}{Using spherical harmonics to model view-dependent appearance}
+
+\begin{frame}{SH Color Representation}
+\begin{columns}
+\column{0.4\textwidth}
+Spherical harmonics are used to represent directional color:
+\[
+\mathbf{C}_i(\bm d)
+=
+\sum_{l=0}^{L}
+\sum_{m=-l}^{l}
+\mathbf{c}_{i,l}^{m}
+Y_l^m(\bm d)
+\]
+where:
+\begin{itemize}
+  \item $\bm d$ is the viewing direction from the Gaussian to the camera.
+  \item $Y_l^m(\bm d)$ is the SH basis value.
+  \item $\mathbf{c}_{i,l}^{m}$ is the learned RGB coefficient.
+\end{itemize}
+For RGB color:
+\[
+\mathbf{c}_{i,l}^{m}
+=
+\left(
+c_{R,i,l}^{m},
+c_{G,i,l}^{m},
+c_{B,i,l}^{m}
+\right)
+\]
+\column{0.6\textwidth}
+\begin{figure}
+\centering
+\imageorplaceholder{figures/sh_color_six_views.png}{0.95\textheight}
+\caption{View-dependent color under SH coefficients}
+\end{figure}
+
+\end{columns}
+\end{frame}
+
+\begin{frame}{3D Gaussian Primitive}
+\begin{columns}
+\column{0.4\textwidth}
+\[
+\mathcal{G}_i =
+\{\bm{\mu}_i,\Sigma_i,\alpha_i,\mathbf{c}_i\}
+\]
+where:
+\begin{itemize}
+  \item $\bm{\mu}_i$ is the 3D position.
+  \item $\Sigma_i$ controls anisotropic shape.
+  \item $\alpha_i$ is opacity.
+  \item $\mathbf{c}_i$ represents color information.
+\end{itemize}
+\column{0.6\textwidth}
+\begin{figure}
+\centering
+\imageorplaceholder{figures/gaussian_ellipsoid_six_views.png}{0.95\textheight}
+\caption{An anisotropic 3D Gaussian primitive}
+\end{figure}
+\end{columns}
+\end{frame}
+
+\begin{frame}{From One Gaussian to a 3D Scene}
+A single Gaussian only represents a small local primitive.
+\vspace{0.2cm}
+By combining thousands or even millions of Gaussians, a complex object or scene can be approximated:
+\[
+\mathcal{S}
+=
+\{\mathcal{G}_1,\mathcal{G}_2,\ldots,\mathcal{G}_N\}
+\]
+where each Gaussian has its own:
+\[
+\mathcal{G}_i =
+\{\bm{\mu}_i,\Sigma_i,\alpha_i,\mathbf{c}_i\}
+\]
+During rendering, these Gaussians are projected to the image plane and blended together:
+\[
+\mathbf{I}(u,v)
+\approx
+\sum_{i=1}^{N}
+T_i(u,v)\,\alpha_i'(u,v)\,\mathbf{C}_i(\bm d)
+\]
+where $T_i$ represents accumulated transmittance from previously blended Gaussians.
+\end{frame}
+
+\begin{frame}{The Pipeline of 3D Gaussian Splatting}
+\begin{center}
+\begin{figure}
+\centering
+\imageorplaceholder{figures/3dgs_pipeline_fig2_original.png}{0.82\textheight}
+\caption{Original optimization pipeline of 3D Gaussian Splatting}
+\end{figure}
+\end{center}
+\end{frame}
+
+\begin{frame}{Examples of 3DGS}
+\begin{columns}
+\column{0.45\textwidth}
+\begin{center}
+\begin{figure}
+\centering
+\imageorplaceholder{figures/000050_overlay.png}{0.8\textheight}
+\caption{Front novel view with directional color}
+\end{figure}
+\end{center}
+
+\column{0.45\textwidth}
+\begin{center}
+\begin{figure}
+\centering
+\imageorplaceholder{figures/000060_overlay.png}{0.8\textheight}
+\caption{Back novel view with directional color}
+\end{figure}
+\end{center}
+\end{columns}
+\end{frame}
+
+\section{Demo and Evaluation}
+\sectiondivider{Section V: Demo and Evaluation}{A panorama-based demonstration of spherical harmonic reconstruction}
+
+\begin{frame}[t]{Demo Design}
+  \justifying
+  \begin{columns}[T]
+    \column{0.52\linewidth}
+    \begin{itemize}
+      \item The user selects a 360$^\circ$ panorama image from a Windows desktop GUI.
+      \item The application computes spherical harmonic coefficients for the RGB channels.
+      \item This demo is a simplified visualization of the directional-color idea used in 3DGS.
+      \item The demo displays the original panorama and reconstructed results under different SH orders.
+    \end{itemize}
+
+    \column{0.42\linewidth}
+    \pipelinebox{
+      Select 360$^\circ$ Image\\[0.2em]
+      $\Downarrow$\\[0.2em]
+      Compute SH Coefficients\\[0.2em]
+      $\Downarrow$\\[0.2em]
+      Compare Reconstructions
+    }
+  \end{columns}
+\end{frame}
+
+
+
+
+\begin{frame}[t]{Conclusion}
+  \justifying
+  \begin{itemize}
+    \item Fourier series show how complex signals can be represented by weighted basis functions.
+    \item Spherical harmonics extend this idea from one-dimensional or planar signals to directional signals on a sphere.
+    \item In 3D Gaussian Splatting, SH coefficients are used to model view-dependent RGB color.
+    \item The panorama demo illustrates how increasing the SH order improves directional signal reconstruction.
+  \end{itemize}
+\end{frame}
+
+\end{document}

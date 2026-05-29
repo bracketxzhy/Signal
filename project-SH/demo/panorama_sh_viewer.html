@@ -1,0 +1,1299 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Panorama SH Fitting</title>
+    <style>
+      :root {
+        color-scheme: light;
+        --blue: #0066cc;
+        --blue-focus: #0071e3;
+        --ink: #1d1d1f;
+        --muted: #6e6e73;
+        --hairline: #e0e0e0;
+        --soft: #f5f5f7;
+        --panel: #ffffff;
+        --black: #000000;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        font-family:
+          system-ui,
+          -apple-system,
+          BlinkMacSystemFont,
+          "Segoe UI",
+          sans-serif;
+        color: var(--ink);
+        background: var(--soft);
+      }
+
+      header {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        min-height: 52px;
+        padding: 8px 24px;
+        background: rgba(245, 245, 247, 0.82);
+        color: var(--ink);
+        border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+        backdrop-filter: blur(18px);
+      }
+
+      h1 {
+        margin: 0;
+        font-size: 21px;
+        line-height: 1.19;
+        font-weight: 600;
+        letter-spacing: 0.01em;
+      }
+
+      main {
+        width: min(1440px, 100%);
+        margin: 0 auto;
+        padding: 38px 24px 56px;
+      }
+
+      .hero {
+        display: grid;
+        gap: 14px;
+        justify-items: center;
+        text-align: center;
+        margin: 16px auto 34px;
+        max-width: 860px;
+      }
+
+      .hero h2 {
+        margin: 0;
+        font-size: clamp(32px, 5vw, 56px);
+        line-height: 1.05;
+        font-weight: 600;
+        letter-spacing: -0.015em;
+      }
+
+      .hero p {
+        margin: 0;
+        max-width: 680px;
+        font-size: 21px;
+        line-height: 1.38;
+        color: var(--muted);
+      }
+
+      .control-grid {
+        display: grid;
+        grid-template-columns: minmax(360px, 1fr) minmax(360px, 1fr);
+        gap: 18px;
+        align-items: stretch;
+        width: min(1180px, 100%);
+        margin: 0 auto 18px;
+      }
+
+      .toolbar {
+        display: grid;
+        grid-template-columns: minmax(280px, 1fr) auto;
+        gap: 14px;
+        align-items: end;
+        min-width: 0;
+        padding: 18px;
+        background: var(--panel);
+        border: 1px solid var(--hairline);
+        border-radius: 18px;
+      }
+
+      label {
+        display: grid;
+        gap: 6px;
+        font-size: 14px;
+        color: var(--muted);
+        letter-spacing: -0.01em;
+      }
+
+      input,
+      button {
+        min-height: 44px;
+        border: 1px solid var(--hairline);
+        background: var(--panel);
+        color: var(--ink);
+        font: inherit;
+        padding: 10px 14px;
+        border-radius: 11px;
+      }
+
+      input[type="range"] {
+        padding-inline: 0;
+        accent-color: var(--blue);
+      }
+
+      button {
+        cursor: pointer;
+        font-weight: 700;
+        border-color: transparent;
+        border-radius: 9999px;
+        color: #ffffff;
+        background: var(--blue);
+        padding-inline: 22px;
+      }
+
+      button:hover:not(:disabled) {
+        background: var(--blue-focus);
+      }
+
+      button:disabled {
+        cursor: not-allowed;
+        color: #7a7a7a;
+        background: #e8e8ed;
+      }
+
+      .status {
+        min-height: 22px;
+        margin: 0 auto 18px;
+        max-width: 860px;
+        color: var(--muted);
+        font-size: 14px;
+        text-align: center;
+      }
+
+      .degree-row {
+        min-width: 0;
+        padding: 14px 18px;
+        background: rgba(255, 255, 255, 0.86);
+        border: 1px solid var(--hairline);
+        border-radius: 18px;
+      }
+
+      .degree-control {
+        display: grid;
+        gap: 8px;
+        min-width: 0;
+      }
+
+      .degree-title {
+        font-size: 14px;
+        color: var(--muted);
+        letter-spacing: -0.01em;
+      }
+
+      .degree-slider-row {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 12px;
+        align-items: center;
+      }
+
+      .metric {
+        font-variant-numeric: tabular-nums;
+        color: var(--blue);
+        font-weight: 700;
+        min-width: 96px;
+        text-align: right;
+      }
+
+      .compare {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 24px;
+      }
+
+      figure {
+        margin: 0;
+        padding: 0;
+        background: var(--panel);
+        border: 0;
+      }
+
+      canvas.preview {
+        width: 100%;
+        aspect-ratio: 2 / 1;
+        display: block;
+        background: #000;
+        cursor: zoom-in;
+      }
+
+      figcaption {
+        margin-top: 12px;
+        font-size: 14px;
+        line-height: 1.43;
+        color: var(--muted);
+        text-align: center;
+        letter-spacing: -0.01em;
+      }
+
+      .immersive {
+        position: fixed;
+        inset: 0;
+        display: none;
+        grid-template-rows: auto 1fr;
+        background: rgba(0, 0, 0, 0.96);
+        z-index: 20;
+      }
+
+      .immersive.open {
+        display: grid;
+      }
+
+      .immersive-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 10px 16px;
+        color: white;
+        background: rgba(0, 0, 0, 0.44);
+        backdrop-filter: blur(18px);
+      }
+
+      .immersive-bar button {
+        min-height: 36px;
+        padding: 8px 16px;
+        background: rgba(210, 210, 215, 0.64);
+        color: white;
+      }
+
+      #immersiveCanvas {
+        width: 100%;
+        height: 100%;
+        display: block;
+        cursor: grab;
+      }
+
+      #immersiveCanvas.dragging {
+        cursor: grabbing;
+      }
+
+      @media (max-width: 920px) {
+        .control-grid {
+          grid-template-columns: 1fr;
+        }
+        .toolbar {
+          grid-template-columns: 1fr 1fr;
+        }
+        .compare {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 560px) {
+        header {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+        .toolbar {
+          grid-template-columns: 1fr;
+        }
+        .degree-slider-row {
+          grid-template-columns: 1fr;
+        }
+        .metric {
+          text-align: left;
+        }
+        main {
+          padding-inline: 14px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Panorama SH Fitting</h1>
+      <button id="download" disabled>Download Coefficients</button>
+    </header>
+
+    <main>
+      <section class="hero">
+        <h2>Fit spherical harmonics to 360 panorama</h2>
+        <p>Upload an equirectangular image, reconstruct it with different SH</p>
+      </section>
+
+      <div class="control-grid">
+        <div class="toolbar">
+          <label>
+            Panorama image
+            <input id="fileInput" type="file" accept="image/*" />
+          </label>
+          <button id="fitButton" disabled>Fit</button>
+        </div>
+
+        <div class="degree-row">
+          <div class="degree-control">
+            <label for="degree" class="degree-title">Reconstruction degree</label>
+            <div class="degree-slider-row">
+              <input
+                id="degree"
+                type="range"
+                min="0"
+                max="12"
+                value="12"
+                step="1"
+                disabled
+              />
+              <span id="degreeLabel" class="metric">L=12/24</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <p id="status" class="status">No image loaded.</p>
+
+      <div class="compare">
+        <figure>
+          <canvas
+            id="originalCanvas"
+            class="preview"
+            width="640"
+            height="320"
+          ></canvas>
+          <figcaption>
+            Original panorama. Click to inspect as a 360 view.
+          </figcaption>
+        </figure>
+        <figure>
+          <canvas
+            id="reconCanvas"
+            class="preview"
+            width="640"
+            height="320"
+          ></canvas>
+          <figcaption id="reconCaption">
+            SH reconstruction. Click to inspect as a 360 view.
+          </figcaption>
+        </figure>
+      </div>
+    </main>
+
+    <div id="immersive" class="immersive" aria-hidden="true">
+      <div class="immersive-bar">
+        <span id="immersiveTitle">360 view</span>
+        <button id="closeImmersive">Close</button>
+      </div>
+      <canvas id="immersiveCanvas"></canvas>
+    </div>
+
+    <script>
+      const fileInput = document.getElementById("fileInput");
+      const fitButton = document.getElementById("fitButton");
+      const downloadButton = document.getElementById("download");
+      const statusText = document.getElementById("status");
+      const degreeSlider = document.getElementById("degree");
+      const degreeLabel = document.getElementById("degreeLabel");
+      const reconCaption = document.getElementById("reconCaption");
+      const originalCanvas = document.getElementById("originalCanvas");
+      const reconCanvas = document.getElementById("reconCanvas");
+      const immersive = document.getElementById("immersive");
+      const immersiveCanvas = document.getElementById("immersiveCanvas");
+      const immersiveTitle = document.getElementById("immersiveTitle");
+      const closeImmersiveButton = document.getElementById("closeImmersive");
+
+      const TARGET_WIDTH = 768;
+      const TARGET_HEIGHT = 384;
+      const MAX_L = 80;
+      const TILE_GRID = 4;
+      const TILE_OVERLAP = 0.1;
+      const WORKER_COUNT = 8;
+
+      let uploadedImage = null;
+      let uploadedName = "panorama";
+      let fitted = null;
+      let immersiveState = null;
+      let immersiveRenderer = null;
+      let fitRunId = 0;
+      let renderRunId = 0;
+      let renderBusy = false;
+      let queuedDegree = null;
+
+      function setStatus(text) {
+        statusText.textContent = text;
+      }
+
+      function clamp01(value) {
+        return Math.min(1, Math.max(0, value));
+      }
+
+      function coeffCount(maxL) {
+        return (maxL + 1) * (maxL + 1);
+      }
+
+      function drawImageToCanvas(image, canvas) {
+        canvas.width = TARGET_WIDTH;
+        canvas.height = TARGET_HEIGHT;
+        const ctx = canvas.getContext("2d", { willReadFrequently: true });
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+        return ctx;
+      }
+
+      function resamplePanorama(image) {
+        const canvas = document.createElement("canvas");
+        drawImageToCanvas(image, canvas);
+        return canvas;
+      }
+
+      function clearReconCanvas() {
+        reconCanvas.width = TARGET_WIDTH;
+        reconCanvas.height = TARGET_HEIGHT;
+        reconCanvas
+          .getContext("2d")
+          .clearRect(0, 0, reconCanvas.width, reconCanvas.height);
+      }
+
+      function getTileJobs(width, height) {
+        const jobs = [];
+        const baseW = Math.floor(width / TILE_GRID);
+        const baseH = Math.floor(height / TILE_GRID);
+        const padX = Math.round(baseW * TILE_OVERLAP);
+        const padY = Math.round(baseH * TILE_OVERLAP);
+
+        for (let ty = 0; ty < TILE_GRID; ty += 1) {
+          for (let tx = 0; tx < TILE_GRID; tx += 1) {
+            const nx0 = tx * baseW;
+            const ny0 = ty * baseH;
+            const nx1 = tx === TILE_GRID - 1 ? width : (tx + 1) * baseW;
+            const ny1 = ty === TILE_GRID - 1 ? height : (ty + 1) * baseH;
+            jobs.push({
+              tileId: ty * TILE_GRID + tx,
+              tx,
+              ty,
+              nx0,
+              ny0,
+              nx1,
+              ny1,
+              x0: Math.max(0, nx0 - padX),
+              y0: Math.max(0, ny0 - padY),
+              x1: Math.min(width, nx1 + padX),
+              y1: Math.min(height, ny1 + padY),
+            });
+          }
+        }
+        return jobs;
+      }
+
+      function createPiecewiseWorkerURL() {
+        const code = `
+          const SQRT2 = Math.SQRT2;
+
+          function coeffCount(maxL) {
+            return (maxL + 1) * (maxL + 1);
+          }
+
+          function shIndex(l, m) {
+            return l * l + l + m;
+          }
+
+          function precomputeK(L) {
+            const logFact = new Float64Array(2 * L + 2);
+            for (let i = 2; i < logFact.length; i += 1) {
+              logFact[i] = logFact[i - 1] + Math.log(i);
+            }
+            const K = new Float64Array((L + 1) * (L + 1));
+            for (let l = 0; l <= L; l += 1) {
+              for (let m = 0; m <= l; m += 1) {
+                K[l * (L + 1) + m] = Math.sqrt(
+                  ((2 * l + 1) / (4 * Math.PI)) *
+                    Math.exp(logFact[l - m] - logFact[l + m]),
+                );
+              }
+            }
+            return K;
+          }
+
+          function computeLegendre(L, x, P) {
+            P.fill(0);
+            const s = Math.sqrt(Math.max(0, 1 - x * x));
+            P[0] = 1;
+            for (let m = 1; m <= L; m += 1) {
+              P[m * (L + 1) + m] =
+                -(2 * m - 1) * s * P[(m - 1) * (L + 1) + (m - 1)];
+            }
+            for (let m = 0; m <= L; m += 1) {
+              if (m < L) {
+                P[(m + 1) * (L + 1) + m] =
+                  x * (2 * m + 1) * P[m * (L + 1) + m];
+              }
+              for (let l = m + 2; l <= L; l += 1) {
+                P[l * (L + 1) + m] =
+                  ((2 * l - 1) * x * P[(l - 1) * (L + 1) + m] -
+                    (l + m - 1) * P[(l - 2) * (L + 1) + m]) /
+                  (l - m);
+              }
+            }
+          }
+
+          function fillTrig(L, phi, cosArr, sinArr) {
+            for (let m = 0; m <= L; m += 1) {
+              cosArr[m] = Math.cos(m * phi);
+              sinArr[m] = Math.sin(m * phi);
+            }
+          }
+
+          function realSHFromTables(l, m, P, K, degreeL, cosArr, sinArr) {
+            const mm = Math.abs(m);
+            const value = K[l * (degreeL + 1) + mm] * P[l * (degreeL + 1) + mm];
+            if (m > 0) return SQRT2 * value * cosArr[mm];
+            if (m < 0) return SQRT2 * value * sinArr[mm];
+            return value;
+          }
+
+          function feather(t) {
+            const x = Math.max(0, Math.min(1, t));
+            return Math.sin(Math.PI * x) ** 2;
+          }
+
+          self.onmessage = (event) => {
+            const data = event.data;
+
+            if (data.type === "fitTile") {
+              const rgba = new Uint8ClampedArray(data.rgba);
+              const {
+                w,
+                maxL,
+                tileId,
+                tx,
+                ty,
+                x0,
+                y0,
+                x1,
+                y1,
+                nx0,
+                ny0,
+                nx1,
+                ny1,
+              } = data;
+              const tileW = x1 - x0;
+              const tileH = y1 - y0;
+              const coeff = new Float64Array(coeffCount(maxL) * 3);
+              const K = precomputeK(maxL);
+              const P = new Float64Array((maxL + 1) * (maxL + 1));
+              const cosArr = new Float64Array(maxL + 1);
+              const sinArr = new Float64Array(maxL + 1);
+              const dTheta = Math.PI / tileH;
+              const dPhi = (2 * Math.PI) / tileW;
+              const start = performance.now();
+
+              for (let y = y0; y < y1; y += 1) {
+                const localY = y - y0;
+                const theta = (Math.PI * (localY + 0.5)) / tileH;
+                const weight = Math.sin(theta) * dTheta * dPhi;
+                computeLegendre(maxL, Math.cos(theta), P);
+                for (let x = x0; x < x1; x += 1) {
+                  const localX = x - x0;
+                  const phi = (2 * Math.PI * (localX + 0.5)) / tileW;
+                  fillTrig(maxL, phi, cosArr, sinArr);
+                  const p = (y * w + x) * 4;
+                  const r = rgba[p] / 255;
+                  const g = rgba[p + 1] / 255;
+                  const b = rgba[p + 2] / 255;
+                  for (let l = 0; l <= maxL; l += 1) {
+                    for (let m = -l; m <= l; m += 1) {
+                      const idx = shIndex(l, m);
+                      const basis =
+                        realSHFromTables(l, m, P, K, maxL, cosArr, sinArr) *
+                        weight;
+                      const c = idx * 3;
+                      coeff[c] += r * basis;
+                      coeff[c + 1] += g * basis;
+                      coeff[c + 2] += b * basis;
+                    }
+                  }
+                }
+              }
+
+              const packed = new Float32Array(coeff.length);
+              for (let i = 0; i < coeff.length; i += 1) {
+                packed[i] = coeff[i];
+              }
+              self.postMessage(
+                {
+                  type: "fitTileDone",
+                  tileId,
+                  tx,
+                  ty,
+                  x0,
+                  y0,
+                  x1,
+                  y1,
+                  nx0,
+                  ny0,
+                  nx1,
+                  ny1,
+                  ms: performance.now() - start,
+                  coeffs: packed.buffer,
+                },
+                [packed.buffer],
+              );
+              return;
+            }
+
+            if (data.type === "renderTile") {
+              const coeffs = new Float32Array(data.coeffs);
+              const degree = data.degree;
+              const tileW = data.x1 - data.x0;
+              const tileH = data.y1 - data.y0;
+              const count = tileW * tileH;
+              const accR = new Float32Array(count);
+              const accG = new Float32Array(count);
+              const accB = new Float32Array(count);
+              const accW = new Float32Array(count);
+              const K = precomputeK(degree);
+              const P = new Float64Array((degree + 1) * (degree + 1));
+              const cosArr = new Float64Array(degree + 1);
+              const sinArr = new Float64Array(degree + 1);
+
+              for (let localY = 0; localY < tileH; localY += 1) {
+                const v = (localY + 0.5) / tileH;
+                const wy = feather(v);
+                if (wy <= 0) continue;
+                const theta = Math.PI * v;
+                computeLegendre(degree, Math.cos(theta), P);
+                for (let localX = 0; localX < tileW; localX += 1) {
+                  const u = (localX + 0.5) / tileW;
+                  const wt = feather(u) * wy;
+                  if (wt <= 0) continue;
+                  const phi = 2 * Math.PI * u;
+                  fillTrig(degree, phi, cosArr, sinArr);
+                  let rr = 0;
+                  let gg = 0;
+                  let bb = 0;
+                  for (let l = 0; l <= degree; l += 1) {
+                    for (let m = -l; m <= l; m += 1) {
+                      const idx = shIndex(l, m);
+                      const basis = realSHFromTables(
+                        l,
+                        m,
+                        P,
+                        K,
+                        degree,
+                        cosArr,
+                        sinArr,
+                      );
+                      const c = idx * 3;
+                      rr += coeffs[c] * basis;
+                      gg += coeffs[c + 1] * basis;
+                      bb += coeffs[c + 2] * basis;
+                    }
+                  }
+                  const q = localY * tileW + localX;
+                  accR[q] = rr * wt;
+                  accG[q] = gg * wt;
+                  accB[q] = bb * wt;
+                  accW[q] = wt;
+                }
+              }
+
+              self.postMessage(
+                {
+                  type: "renderTileDone",
+                  tileId: data.tileId,
+                  x0: data.x0,
+                  y0: data.y0,
+                  x1: data.x1,
+                  y1: data.y1,
+                  accR: accR.buffer,
+                  accG: accG.buffer,
+                  accB: accB.buffer,
+                  accW: accW.buffer,
+                },
+                [accR.buffer, accG.buffer, accB.buffer, accW.buffer],
+              );
+            }
+          };
+        `;
+        return URL.createObjectURL(
+          new Blob([code], { type: "text/javascript" }),
+        );
+      }
+
+      const piecewiseWorkerUrl = createPiecewiseWorkerURL();
+
+      function runWorkerQueue(jobs, makePayload, onMessage, onProgress) {
+        return new Promise((resolve, reject) => {
+          if (!jobs.length) {
+            resolve();
+            return;
+          }
+
+          const limit = Math.max(1, Math.min(WORKER_COUNT, jobs.length, 22));
+          const activeWorkers = new Set();
+          let next = 0;
+          let active = 0;
+          let done = 0;
+          let settled = false;
+
+          function shutdown(error) {
+            if (settled) return;
+            settled = true;
+            for (const worker of activeWorkers) worker.terminate();
+            activeWorkers.clear();
+            if (error) {
+              reject(error instanceof Error ? error : new Error(String(error)));
+            } else {
+              resolve();
+            }
+          }
+
+          function launch() {
+            if (settled) return;
+            while (active < limit && next < jobs.length) {
+              const job = jobs[next];
+              next += 1;
+              active += 1;
+              const worker = new Worker(piecewiseWorkerUrl);
+              activeWorkers.add(worker);
+              worker.onmessage = (event) => {
+                worker.terminate();
+                activeWorkers.delete(worker);
+                active -= 1;
+                done += 1;
+                try {
+                  onMessage(event.data, job);
+                } catch (error) {
+                  shutdown(error);
+                  return;
+                }
+                if (onProgress) onProgress(done, jobs.length, event.data, job);
+                if (done === jobs.length) {
+                  shutdown();
+                  return;
+                }
+                launch();
+              };
+              worker.onerror = (error) => {
+                worker.terminate();
+                activeWorkers.delete(worker);
+                active -= 1;
+                shutdown(error.message || error);
+              };
+              const payload = makePayload(job);
+              worker.postMessage(payload.message, payload.transfer || []);
+            }
+          }
+
+          launch();
+        });
+      }
+
+      async function fitPanoramaPiecewise(image, maxL) {
+        const workCanvas = document.createElement("canvas");
+        const ctx = drawImageToCanvas(image, workCanvas);
+        const rgba = ctx.getImageData(0, 0, TARGET_WIDTH, TARGET_HEIGHT).data;
+        const jobs = getTileJobs(TARGET_WIDTH, TARGET_HEIGHT);
+        const tiles = new Array(jobs.length);
+        const runId = ++fitRunId;
+
+        await runWorkerQueue(
+          jobs,
+          (job) => {
+            const copy = new Uint8ClampedArray(rgba);
+            return {
+              message: {
+                type: "fitTile",
+                rgba: copy.buffer,
+                w: TARGET_WIDTH,
+                maxL,
+                ...job,
+              },
+              transfer: [copy.buffer],
+            };
+          },
+          (message) => {
+            if (runId !== fitRunId) return;
+            tiles[message.tileId] = {
+              tileId: message.tileId,
+              tx: message.tx,
+              ty: message.ty,
+              x0: message.x0,
+              y0: message.y0,
+              x1: message.x1,
+              y1: message.y1,
+              nx0: message.nx0,
+              ny0: message.ny0,
+              nx1: message.nx1,
+              ny1: message.ny1,
+              coeffs: new Float32Array(message.coeffs),
+            };
+          },
+          (done, total, message) => {
+            if (runId !== fitRunId) return;
+            setStatus(
+              `Fitting ${done}/${total} blocks. Tile ${message.tileId} finished in ${message.ms.toFixed(0)} ms.`,
+            );
+          },
+        );
+
+        return {
+          maxL,
+          width: TARGET_WIDTH,
+          height: TARGET_HEIGHT,
+          tileX: TILE_GRID,
+          tileY: TILE_GRID,
+          overlap: TILE_OVERLAP,
+          tiles,
+        };
+      }
+
+      async function reconstructPiecewiseToCanvas(model, degree, canvas) {
+        const width = model.width;
+        const height = model.height;
+        const accR = new Float32Array(width * height);
+        const accG = new Float32Array(width * height);
+        const accB = new Float32Array(width * height);
+        const accW = new Float32Array(width * height);
+        const runId = ++renderRunId;
+
+        await runWorkerQueue(
+          model.tiles,
+          (tile) => {
+            const coeffs = new Float32Array(tile.coeffs);
+            return {
+              message: {
+                type: "renderTile",
+                tileId: tile.tileId,
+                degree,
+                x0: tile.x0,
+                y0: tile.y0,
+                x1: tile.x1,
+                y1: tile.y1,
+                coeffs: coeffs.buffer,
+              },
+              transfer: [coeffs.buffer],
+            };
+          },
+          (message) => {
+            if (runId !== renderRunId) return;
+            const tileW = message.x1 - message.x0;
+            const tileH = message.y1 - message.y0;
+            const tileR = new Float32Array(message.accR);
+            const tileG = new Float32Array(message.accG);
+            const tileB = new Float32Array(message.accB);
+            const tileWeight = new Float32Array(message.accW);
+
+            for (let y = 0; y < tileH; y += 1) {
+              const dstRow = (message.y0 + y) * width + message.x0;
+              const srcRow = y * tileW;
+              for (let x = 0; x < tileW; x += 1) {
+                const src = srcRow + x;
+                const dst = dstRow + x;
+                accR[dst] += tileR[src];
+                accG[dst] += tileG[src];
+                accB[dst] += tileB[src];
+                accW[dst] += tileWeight[src];
+              }
+            }
+          },
+          (done, total) => {
+            if (runId !== renderRunId) return;
+            setStatus(`Rendering ${done}/${total} blocks...`);
+          },
+        );
+
+        if (runId !== renderRunId) return;
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext("2d");
+        const imageData = ctx.createImageData(width, height);
+        const out = imageData.data;
+
+        for (let i = 0; i < width * height; i += 1) {
+          const inv = accW[i] > 1e-8 ? 1 / accW[i] : 0;
+          const p = i * 4;
+          out[p] = Math.round(255 * clamp01(accR[i] * inv));
+          out[p + 1] = Math.round(255 * clamp01(accG[i] * inv));
+          out[p + 2] = Math.round(255 * clamp01(accB[i] * inv));
+          out[p + 3] = 255;
+        }
+
+        ctx.putImageData(imageData, 0, 0);
+      }
+
+      async function showDegree(value) {
+        if (!fitted) return;
+        queuedDegree = Math.max(0, Math.min(fitted.maxL, Number(value)));
+        degreeSlider.value = String(queuedDegree);
+        degreeLabel.textContent = `L=${queuedDegree}/${fitted.maxL}`;
+        reconCaption.textContent =
+          `Piecewise SH reconstruction. Local degree ${queuedDegree}. Click to inspect as a 360 view.`;
+
+        if (renderBusy) return;
+        renderBusy = true;
+
+        try {
+          while (queuedDegree !== null) {
+            const degree = queuedDegree;
+            queuedDegree = null;
+            setStatus(
+              `Rendering piecewise reconstruction at local L = ${degree} with ${WORKER_COUNT} workers...`,
+            );
+            await reconstructPiecewiseToCanvas(fitted, degree, reconCanvas);
+            if (queuedDegree === null) {
+              setStatus(
+                `Rendered local L = ${degree}. ${fitted.tileX * fitted.tileY} blended tiles, overlap ${Math.round(fitted.overlap * 100)}%.`,
+              );
+            }
+          }
+        } finally {
+          renderBusy = false;
+        }
+      }
+
+      function downloadCoefficients() {
+        if (!fitted) return;
+        const payload = {
+          source: uploadedName,
+          type: "piecewise_sh",
+          width: fitted.width,
+          height: fitted.height,
+          maxL: fitted.maxL,
+          tileX: fitted.tileX,
+          tileY: fitted.tileY,
+          overlap: fitted.overlap,
+          tiles: fitted.tiles.map((tile) => ({
+            tileId: tile.tileId,
+            tx: tile.tx,
+            ty: tile.ty,
+            x0: tile.x0,
+            y0: tile.y0,
+            x1: tile.x1,
+            y1: tile.y1,
+            nx0: tile.nx0,
+            ny0: tile.ny0,
+            nx1: tile.nx1,
+            ny1: tile.ny1,
+            coeffs: Array.from(tile.coeffs),
+          })),
+        };
+
+        const blob = new Blob([JSON.stringify(payload)], {
+          type: "application/json",
+        });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = `${uploadedName.replace(/\.[^.]+$/, "")}_piecewise_sh.json`;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        URL.revokeObjectURL(url);
+      }
+
+      function compileImmersiveShader(gl, type, source) {
+        const shader = gl.createShader(type);
+        gl.shaderSource(shader, source);
+        gl.compileShader(shader);
+        if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+          throw new Error(gl.getShaderInfoLog(shader));
+        }
+        return shader;
+      }
+
+      function getImmersiveRenderer() {
+        if (immersiveRenderer) return immersiveRenderer;
+        const gl = immersiveCanvas.getContext("webgl", {
+          antialias: false,
+          preserveDrawingBuffer: false,
+        });
+        if (!gl) throw new Error("WebGL is not supported by this browser.");
+
+        const vertexSource = `
+          attribute vec2 a_pos;
+          varying vec2 v_uv;
+          void main() {
+            v_uv = a_pos * 0.5 + 0.5;
+            gl_Position = vec4(a_pos, 0.0, 1.0);
+          }
+        `;
+        const fragmentSource = `
+          precision highp float;
+          varying vec2 v_uv;
+          uniform sampler2D u_tex;
+          uniform vec2 u_resolution;
+          uniform float u_yaw;
+          uniform float u_pitch;
+          uniform float u_fov;
+
+          const float PI = 3.141592653589793;
+          const float TWO_PI = 6.283185307179586;
+
+          mat3 rotY(float a) {
+            float s = sin(a), c = cos(a);
+            return mat3(c, 0.0, -s, 0.0, 1.0, 0.0, s, 0.0, c);
+          }
+
+          mat3 rotX(float a) {
+            float s = sin(a), c = cos(a);
+            return mat3(1.0, 0.0, 0.0, 0.0, c, -s, 0.0, s, c);
+          }
+
+          void main() {
+            vec2 xy = (gl_FragCoord.xy / u_resolution) * 2.0 - 1.0;
+            xy.x *= u_resolution.x / u_resolution.y;
+
+            float z = 1.0 / tan(u_fov * 0.5);
+            vec3 dir = normalize(vec3(xy.x, xy.y, z));
+            dir = rotY(u_yaw) * rotX(u_pitch) * dir;
+
+            float lon = atan(dir.x, dir.z);
+            float lat = asin(clamp(dir.y, -1.0, 1.0));
+            float u = lon / TWO_PI + 0.5;
+            float v = lat / PI + 0.5;
+
+            vec3 color = texture2D(u_tex, vec2(u, 1.0 - v)).rgb;
+            gl_FragColor = vec4(color, 1.0);
+          }
+        `;
+
+        const program = gl.createProgram();
+        gl.attachShader(
+          program,
+          compileImmersiveShader(gl, gl.VERTEX_SHADER, vertexSource),
+        );
+        gl.attachShader(
+          program,
+          compileImmersiveShader(gl, gl.FRAGMENT_SHADER, fragmentSource),
+        );
+        gl.linkProgram(program);
+        if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+          throw new Error(gl.getProgramInfoLog(program));
+        }
+        gl.useProgram(program);
+
+        const quad = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, quad);
+        gl.bufferData(
+          gl.ARRAY_BUFFER,
+          new Float32Array([-1, -1, 1, -1, -1, 1, -1, 1, 1, -1, 1, 1]),
+          gl.STATIC_DRAW,
+        );
+
+        const aPos = gl.getAttribLocation(program, "a_pos");
+        gl.enableVertexAttribArray(aPos);
+        gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 0, 0);
+
+        const texture = gl.createTexture();
+        gl.bindTexture(gl.TEXTURE_2D, texture);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+        gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+
+        immersiveRenderer = {
+          gl,
+          texture,
+          uResolution: gl.getUniformLocation(program, "u_resolution"),
+          uYaw: gl.getUniformLocation(program, "u_yaw"),
+          uPitch: gl.getUniformLocation(program, "u_pitch"),
+          uFov: gl.getUniformLocation(program, "u_fov"),
+        };
+        return immersiveRenderer;
+      }
+
+      function renderImmersive() {
+        if (!immersiveState) return;
+        const renderer = getImmersiveRenderer();
+        const gl = renderer.gl;
+        const rect = immersiveCanvas.getBoundingClientRect();
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        const width = Math.max(320, Math.floor(rect.width * dpr));
+        const height = Math.max(220, Math.floor(rect.height * dpr));
+
+        if (
+          immersiveCanvas.width !== width ||
+          immersiveCanvas.height !== height
+        ) {
+          immersiveCanvas.width = width;
+          immersiveCanvas.height = height;
+        }
+
+        gl.viewport(0, 0, immersiveCanvas.width, immersiveCanvas.height);
+        gl.uniform2f(
+          renderer.uResolution,
+          immersiveCanvas.width,
+          immersiveCanvas.height,
+        );
+        gl.uniform1f(renderer.uYaw, immersiveState.yaw);
+        gl.uniform1f(renderer.uPitch, immersiveState.pitch);
+        gl.uniform1f(renderer.uFov, immersiveState.fov);
+        gl.drawArrays(gl.TRIANGLES, 0, 6);
+      }
+
+      function openImmersive(canvas, title) {
+        if (!canvas.width || !canvas.height) return;
+        const renderer = getImmersiveRenderer();
+        const gl = renderer.gl;
+        gl.bindTexture(gl.TEXTURE_2D, renderer.texture);
+        gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
+        gl.texImage2D(
+          gl.TEXTURE_2D,
+          0,
+          gl.RGBA,
+          gl.RGBA,
+          gl.UNSIGNED_BYTE,
+          canvas,
+        );
+        immersiveState = {
+          yaw: 0,
+          pitch: 0,
+          fov: Math.PI / 2,
+          dragging: false,
+          lastX: 0,
+          lastY: 0,
+        };
+        immersiveTitle.textContent = `${title} - drag to look around, scroll to zoom`;
+        immersive.classList.add("open");
+        immersive.setAttribute("aria-hidden", "false");
+        renderImmersive();
+      }
+
+      function closeImmersive() {
+        immersive.classList.remove("open");
+        immersive.setAttribute("aria-hidden", "true");
+        immersiveState = null;
+      }
+
+      fileInput.addEventListener("change", () => {
+        const file = fileInput.files && fileInput.files[0];
+        if (!file) return;
+        uploadedName = file.name;
+        fitRunId += 1;
+        renderRunId += 1;
+        renderBusy = false;
+        queuedDegree = null;
+        const url = URL.createObjectURL(file);
+        const image = new Image();
+        image.onload = () => {
+          uploadedImage = resamplePanorama(image);
+          fitted = null;
+          fitButton.disabled = false;
+          downloadButton.disabled = true;
+          degreeSlider.disabled = true;
+          degreeSlider.min = "0";
+          degreeSlider.max = String(MAX_L);
+          degreeSlider.value = String(MAX_L);
+          degreeLabel.textContent = `L=${MAX_L}/${MAX_L}`;
+          drawImageToCanvas(uploadedImage, originalCanvas);
+          clearReconCanvas();
+          setStatus(
+            `${file.name} loaded. Fixed preset: width ${TARGET_WIDTH}, local L ${MAX_L}, overlap ${Math.round(TILE_OVERLAP * 100)}%, grid ${TILE_GRID} x ${TILE_GRID}, workers ${WORKER_COUNT}.`,
+          );
+          URL.revokeObjectURL(url);
+        };
+        image.onerror = () => {
+          fitButton.disabled = true;
+          setStatus("Image loading failed.");
+          URL.revokeObjectURL(url);
+        };
+        image.src = url;
+      });
+
+      fitButton.addEventListener("click", async () => {
+        if (!uploadedImage) return;
+        fitButton.disabled = true;
+        downloadButton.disabled = true;
+        degreeSlider.disabled = true;
+        renderBusy = false;
+        queuedDegree = null;
+        setStatus(
+          `Fitting piecewise SH with width ${TARGET_WIDTH}, local L ${MAX_L}, overlap ${Math.round(TILE_OVERLAP * 100)}%, grid ${TILE_GRID} x ${TILE_GRID}, workers ${WORKER_COUNT}...`,
+        );
+        try {
+          console.time("piecewise-fit");
+          fitted = await fitPanoramaPiecewise(uploadedImage, MAX_L);
+          console.timeEnd("piecewise-fit");
+          degreeSlider.min = "0";
+          degreeSlider.max = String(MAX_L);
+          degreeSlider.value = String(MAX_L);
+          degreeLabel.textContent = `L=${MAX_L}/${MAX_L}`;
+          degreeSlider.disabled = false;
+          downloadButton.disabled = false;
+          await showDegree(MAX_L);
+          setStatus(
+            `Done. ${fitted.tileX * fitted.tileY} tiles x ${coeffCount(MAX_L)} coeffs/tile, overlap ${Math.round(TILE_OVERLAP * 100)}%. Slow before because the old page tried to fit one global basis to the whole panorama.`,
+          );
+        } catch (error) {
+          fitted = null;
+          setStatus(`Fitting failed: ${error.message}`);
+        } finally {
+          fitButton.disabled = false;
+        }
+      });
+
+      degreeSlider.addEventListener("input", (event) =>
+        showDegree(event.target.value),
+      );
+      downloadButton.addEventListener("click", downloadCoefficients);
+      originalCanvas.addEventListener("click", () =>
+        openImmersive(originalCanvas, "Original panorama"),
+      );
+      reconCanvas.addEventListener("click", () =>
+        openImmersive(
+          reconCanvas,
+          `Piecewise SH reconstruction L = ${degreeSlider.value}`,
+        ),
+      );
+      closeImmersiveButton.addEventListener("click", closeImmersive);
+      immersive.addEventListener("click", (event) => {
+        if (event.target === immersive) closeImmersive();
+      });
+      immersiveCanvas.addEventListener("pointerdown", (event) => {
+        if (!immersiveState) return;
+        immersiveState.dragging = true;
+        immersiveState.lastX = event.clientX;
+        immersiveState.lastY = event.clientY;
+        immersiveCanvas.classList.add("dragging");
+        immersiveCanvas.setPointerCapture(event.pointerId);
+      });
+      immersiveCanvas.addEventListener("pointermove", (event) => {
+        if (!immersiveState || !immersiveState.dragging) return;
+        const dx = event.clientX - immersiveState.lastX;
+        const dy = event.clientY - immersiveState.lastY;
+        immersiveState.lastX = event.clientX;
+        immersiveState.lastY = event.clientY;
+        immersiveState.yaw -= dx * 0.006;
+        immersiveState.pitch = Math.max(
+          -1.35,
+          Math.min(1.35, immersiveState.pitch + dy * 0.006),
+        );
+        renderImmersive();
+      });
+      immersiveCanvas.addEventListener("pointerup", (event) => {
+        if (!immersiveState) return;
+        immersiveState.dragging = false;
+        immersiveCanvas.classList.remove("dragging");
+        immersiveCanvas.releasePointerCapture(event.pointerId);
+      });
+      immersiveCanvas.addEventListener(
+        "wheel",
+        (event) => {
+          if (!immersiveState) return;
+          event.preventDefault();
+          immersiveState.fov = Math.max(
+            0.45,
+            Math.min(1.75, immersiveState.fov + Math.sign(event.deltaY) * 0.08),
+          );
+          renderImmersive();
+        },
+        { passive: false },
+      );
+      window.addEventListener("resize", renderImmersive);
+      window.addEventListener("keydown", (event) => {
+        if (event.key === "Escape") closeImmersive();
+      });
+      window.addEventListener("beforeunload", () => {
+        URL.revokeObjectURL(piecewiseWorkerUrl);
+      });
+
+      degreeSlider.max = String(MAX_L);
+      degreeSlider.value = String(MAX_L);
+      degreeLabel.textContent = `L=${MAX_L}/${MAX_L}`;
+      setStatus(
+        `No image loaded. Fixed preset: width ${TARGET_WIDTH}, local L ${MAX_L}, overlap ${Math.round(TILE_OVERLAP * 100)}%, grid ${TILE_GRID} x ${TILE_GRID}, workers ${WORKER_COUNT}.`,
+      );
+    </script>
+  </body>
+</html>

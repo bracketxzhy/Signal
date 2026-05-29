@@ -1,0 +1,5 @@
+\beamer@sectionintoc {1}{Background}{3}{0}{1}
+\beamer@sectionintoc {2}{Edges Detection}{9}{0}{2}
+\beamer@sectionintoc {3}{Pattern Recognition}{16}{0}{3}
+\beamer@sectionintoc {4}{Facial Semantic Segmentation}{22}{0}{4}
+\beamer@sectionintoc {5}{Demo and Evaluation}{26}{0}{5}

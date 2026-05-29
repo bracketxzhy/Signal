@@ -9,6 +9,8 @@
 \usepackage{amsmath}
 \usepackage{ragged2e}
 \usepackage{xcolor}
+\usepackage{array}
+\usepackage{subcaption}
 
 \definecolor{SCUGreen}{RGB}{8,79,52}
 \definecolor{SCULight}{RGB}{223,233,227}
@@ -23,7 +25,6 @@
 \setbeamercolor{itemize item}{fg=SCUDot}
 \setbeamercolor{itemize subitem}{fg=SCUDot}
 \setbeamercolor{enumerate item}{fg=SCUDot}
-\setbeamercolor{section in toc}{fg=SCUGreen}
 
 \setbeamerfont{title}{size=\Large,series=\bfseries}
 \setbeamerfont{subtitle}{size=\large}
@@ -45,8 +46,40 @@
   \end{beamercolorbox}
 }
 
-\title{Project: Edge Detection in Noisy Images Using 2D Filtering}
-\subtitle{ECE 0402: Signals, Systems \& Probability}
+\newcommand{\pipelinebox}[1]{
+  \begin{beamercolorbox}[wd=\linewidth,sep=0.8em,rounded=true,center]{frametitle}
+    \color{SCUGreen}\bfseries #1
+  \end{beamercolorbox}
+}
+
+\newcommand{\sectiondivider}[2]{
+  \begin{frame}[plain]
+    \vspace{1.75cm}
+    {\color{SCUGreen}\bfseries\fontsize{15.2}{18}\selectfont #1\par}
+    \vspace{0.42cm}
+    {\color{SCUGreen}\fontsize{13.2}{15.6}\selectfont #2\par}
+    \vspace{0.28cm}
+    {\color{SCUGreen}\rule{0.92\linewidth}{0.55pt}\par}
+    \vfill
+  \end{frame}
+}
+
+\newcommand{\imageorplaceholder}[2]{
+  \IfFileExists{#1}{
+    \includegraphics[width=\linewidth,height=#2,keepaspectratio]{#1}
+  }{
+    \fbox{
+      \parbox[c][#2][c]{0.92\linewidth}{
+        \centering
+        \textbf{Placeholder}\\[0.4em]
+        \path{#1}
+      }
+    }
+  }
+}
+
+\title{From Edge Detection to Facial Segmentation}
+\subtitle{A Classical Signal Processing Pipeline for Visual Pattern Recognition}
 \author{Heyang Zhang (Stefan) Zhang}
 \institute{Sichuan University - Pittsburgh Institute}
 \date{}
@@ -54,147 +87,472 @@
 \begin{document}
 
 \begin{frame}[plain]
-  \vspace{1.95cm}
-  {\color{SCUGreen}\bfseries\fontsize{14.5}{17.2}\selectfont \inserttitle\par}
-  \vspace{0.62cm}
-  {\color{SCUGreen}\fontsize{15}{18}\selectfont \insertsubtitle\par}
-  \vspace{0.34cm}
-  {\color{SCUGreen}\rule{0.95\linewidth}{0.55pt}\par}
+  \vspace{1.55cm}
+  {\color{SCUGreen}\bfseries\fontsize{15.2}{18}\selectfont \inserttitle\par}
+  \vspace{0.42cm}
+  {\color{SCUGreen}\fontsize{13.2}{15.6}\selectfont \insertsubtitle\par}
+  \vspace{0.28cm}
+  {\color{SCUGreen}\rule{0.96\linewidth}{0.55pt}\par}
   \vfill
-  {\centering\fontsize{12.3}{14.6}\selectfont \insertauthor\par}
-  \vspace{0.95cm}
-  {\centering\fontsize{12}{15}\selectfont \insertinstitute\par}
-  \vspace{1.25cm}
+  {\centering\fontsize{11.8}{14}\selectfont \insertauthor\par}
+  \vspace{0.75cm}
+  {\centering\fontsize{11}{13}\selectfont \insertinstitute\par}
+  \vspace{1.15cm}
 \end{frame}
 
-\begin{frame}[t]{Problem and Motivation}
-  \justifying
+\begin{frame}[t]{Contents}
+  \large
+  \vspace{1.5cm}
   \begin{itemize}
-    \item Images are 2D signals, so edge detection is a filtering problem.
-    \item Noise and true edges both trigger large derivative responses.
-    \item The main question: how does filtering improve edge detection under noise?
+    \item Section I: Brackground and Fundamental Theory
+    \item Section II:  Edges Detection
+    \item Section III: Pattern Recognition
+    \item Section IV: Facial Semantic Segmentation
+    \item Section V: Demo and Evaluation
+    \item Conclusion
   \end{itemize}
 \end{frame}
 
-\begin{frame}[t]{Why Edges Are High-Frequency Structure}
+\section{Background}
+\sectiondivider{Section I: Background and Fundamental Theory}{From convolution in signals to convolution in images}
+
+\begin{frame}[t]{Background}
   \justifying
-  \small
   \begin{itemize}
-    \item An edge is a rapid intensity change.
-    \item A derivative-based operator amplifies rapid changes.
-    \item Noise also changes rapidly, so naive edge detection confuses noise with structure.
+    \item Convolution first appeared as a core operation in one-dimensional signal processing, where systems were studied through their responses to input signals.
+    \item In this view, a filter slides along a signal and produces a weighted local response, making smoothing, differentiation, and feature measurement mathematically systematic.
+    \item As digital images became common, the same idea was extended from 1D sequences to 2D grids of pixel intensities.
+    \item This historical shift made convolution one of the basic tools for image processing, linking classical signal theory with modern visual analysis.
   \end{itemize}
-  \vspace{0.2em}
+  \vspace{0.7em}
+  \pipelinebox{1D signal processing $\rightarrow$ convolutional filters $\rightarrow$ 2D image processing}
+\end{frame}
+
+\begin{frame}[t]{1D Signal Convolution}
+  \justifying
+  In one-dimensional signal processing, convolution describes how an input signal interacts with a system or filter.
+  The output at each location is a weighted sum of nearby input values:
+  \[
+  y[n] = \sum_{k=-\infty}^{\infty} x[k]\,h[n-k]
+  \]
+  where:
+  \begin{itemize}
+    \item \(x[k]\) is the input signal,
+    \item \(h[n]\) is the filter or impulse response,
+    \item \(y[n]\) is the output response.
+  \end{itemize}
+  \vspace{0.5em}
+  The main idea is sliding a filter across the signal and computing a local weighted response.
+\end{frame}
+
+\begin{frame}[t]{Image as a 2D Signal}
+  \justifying
+  \begin{columns}[T]
+    \column{0.5\linewidth}
+    \begin{itemize}
+      \item A grayscale image can be modeled as a discrete 2D signal:
+      \[
+      I[m,n], \quad m=0,\dots,M-1,\; n=0,\dots,N-1
+      \]
+      \item Each pixel stores intensity at a spatial location.
+      \item Edges correspond to local intensity changes in horizontal and vertical directions.
+      \item This lets us reuse the language of systems, responses, and filtering instead of treating images as mysterious AI inputs.
+    \end{itemize}
+    \column{0.5\linewidth}
+    \imageorplaceholder{figures/image_gallery.png}{0.99\textheight}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[t]{2D Image Convolution}
+  \justifying
+  For an image, the same idea extends from one dimension to two dimensions:
+  \[
+  G[m,n] = \sum_{i=-a}^{a}\sum_{j=-b}^{b} I[m-i,n-j]\,K[i,j]
+  \]
+  or more compactly,
+  \[
+  G = I * K
+  \]
+  where:
+  \begin{itemize}
+    \item \(I[m,n]\) is the input, \(K[i,j]\) is the convolution kernel, and \(G[m,n]\) is the output.
+  \end{itemize}
   \centering
-  \includegraphics[width=0.42\linewidth,height=0.48\textheight,keepaspectratio]{../assets/generated/figures/image_gallery.png}
+  \imageorplaceholder{figures/2d_convolution_diagram.png}{0.46\textheight}
 \end{frame}
 
-\begin{frame}[t]{2D Convolution and Sobel Intuition}
+\begin{frame}[t]{Convolution on Images}
   \justifying
-  \small
+  \begin{itemize}
+    \item A Gaussian kernel performs smoothing by averaging nearby pixels with distance-based weights.
+    \item After smoothing, derivative-based filters respond more clearly to stable boundaries instead of random noise.
+    \item This is why convolution is the foundation of both classical edge detection and later visual feature extraction methods.
+  \end{itemize}
+
+  \begin{figure}
+    \centering
+    \begin{subfigure}[t]{0.32\linewidth}
+      \centering
+      \includegraphics[width=\linewidth,height=0.4\textheight,keepaspectratio]{figures/gaussian_original.png}
+      \caption{Original}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.32\linewidth}
+      \centering
+      \includegraphics[width=\linewidth,height=0.4\textheight,keepaspectratio]{figures/gaussian_smoothed.png}
+      \caption{Gaussian smoothing}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.32\linewidth}
+      \centering
+      \includegraphics[width=\linewidth,height=0.4\textheight,keepaspectratio]{figures/gaussian_enhanced.png}
+      \caption{Enhanced detail}
+    \end{subfigure}
+    \caption{Gaussian convolution smooths a 2D image using distance-weighted local averaging.}
+  \end{figure}
+\end{frame}
+
+\section{Edges Detection}
+\sectiondivider{Section II: Edges Detection}{From image intensity changes to edge-enhanced structure}
+
+
+
+\begin{frame}[t]{Edge Detection as Filtering}
+  \justifying
+  \begin{columns}[T]
+    \column{0.38\linewidth}
+    \vspace{1.5em}
+    \begin{itemize}
+      \item Edge detection is a filtering problem based on convolution.
+      \item Derivative-like filters respond strongly to high-frequency structures.
+      \item That is useful for boundaries, but noise also lives in the high-frequency range.
+      \item So the pipeline must balance sensitivity to structure against sensitivity to noise.
+    \end{itemize}
+    \column{0.6\linewidth}
+    \imageorplaceholder{figures/filtering_concept.png}{0.95\textheight}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[t]{Gaussian Smoothing Kernel}
+  \justifying
+  \begin{columns}[T]
+    \column{0.5\linewidth}
+    \vspace{0.55em}
+    \[
+    G_\sigma(x,y)=
+    \frac{1}{2\pi\sigma^2}
+    e^{-\frac{x^2+y^2}{2\sigma^2}}
+    \]
+    \vspace{0.55em}
+    \[
+    K[i,j]=
+    \frac{G_\sigma(i,j)}
+    {\sum_{p,q}G_\sigma(p,q)}
+    \]
+    \vspace{0.55em}
+    \[
+    I_{\text{smooth}}=I*K
+    \]
+    \vspace{0.55em}
+    \begin{itemize}
+      \item The center pixel receives the largest weight.
+      \item Nearby pixels contribute less as distance increases.
+      \item This suppresses noise before derivative filters amplify edges.
+    \end{itemize}
+    \column{0.45\linewidth}
+    \imageorplaceholder{figures/gaussian_kernel_panel.png}{0.85\textheight}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[t]{Sobel Operator}
+  \justifying
   \begin{columns}[T]
     \column{0.55\linewidth}
-    \includegraphics[width=\linewidth,height=0.54\textheight,keepaspectratio]{../assets/generated/figures/sobel_kernels.png}
+    \[
+    G_x = I * S_x, \qquad
+    G_y = I * S_y
+    \]
+    \vspace{0.8em}
+    \[
+    G = \sqrt{G_x^2 + G_y^2}
+    \]
+    \vspace{0.6em}
+    \[
+    S_x=
+    \begin{bmatrix}
+    -1 & 0 & 1\\
+    -2 & 0 & 2\\
+    -1 & 0 & 1
+    \end{bmatrix}
+    \qquad
+    S_y=
+    \begin{bmatrix}
+    -1 & -2 & -1\\
+    0 & 0 & 0\\
+    1 & 2 & 1
+    \end{bmatrix}
+    \]
+    \vspace{0.35em}
+    \begin{itemize}
+      \item $G_x$ measures horizontal intensity change.
+      \item $G_y$ measures vertical intensity change.
+      \item The gradient magnitude marks boundary strength.
+      \item Sobel is a deterministic convolution filter.
+    \end{itemize}
+
+    \column{0.45\linewidth}
+    \imageorplaceholder{figures/sobel_kernels.png}{0.85\textheight}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[t]{Sobel Responses}
+  \justifying
+  \small
+  The astronaut image is first smoothed with a Gaussian filter
+
+  {\footnotesize Note: in $G_x$ and $G_y$, bright regions indicate positive directional change, dark regions indicate negative directional change, and mid-gray means weak response.}
+  \vspace{0.35em}
+  \begin{figure}
+    \centering
+    \begin{subfigure}[t]{0.31\linewidth}
+      \centering
+      \includegraphics[width=\linewidth]{figures/astronaut_sobel_gx.png}
+      \caption{$G_x$ response}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.31\linewidth}
+      \centering
+      \includegraphics[width=\linewidth]{figures/astronaut_sobel_gy.png}
+      \caption{$G_y$ response}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[t]{0.31\linewidth}
+      \centering
+      \includegraphics[width=\linewidth]{figures/astronaut_sobel_g.png}
+      \caption{Gradient magnitude $G$}
+    \end{subfigure}
+  \end{figure}
+\end{frame}
+
+\begin{frame}[t]{Canny Edge Detection Pipeline}
+  \justifying
+  \begin{columns}[T]
+    \column{0.3\linewidth}
+    \begin{enumerate}
+      \item Gaussian smoothing to suppress unstable noise.
+      \item Gradient calculation to estimate local edge strength and direction.
+      \item Non-maximum suppression to keep thin edge responses.
+      \item Double thresholding to separate strong and weak candidates.
+      \item Edge tracking by hysteresis to keep connected meaningful edges.
+    \end{enumerate}
+    \column{0.68\linewidth}
+    \vspace{0.45em}
+    \imageorplaceholder{figures/astronaut_pipeline.png}{1\textheight}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[t]{Color Edge Detection}
+  \justifying
+  \begin{itemize}
+    \item A color image can be treated as three 2D signals: R, G, and B.
+    \item The same edge detector can be applied independently to each channel.
+  \end{itemize}
+  \vspace{0.25em}
+  \centering
+  \imageorplaceholder{figures/rgb_edge_pipeline.png}{0.75\textheight}
+\end{frame}
+
+\section{Pattern Recognition}
+\sectiondivider{Section III: Pattern Recognition}{Grouping local edge responses into pattern hypotheses}
+
+\begin{frame}[t]{Why Edges Are Not Enough}
+  \justifying
+  \begin{itemize}
+    \item Edge detection gives local structure, not semantic understanding.
+    \item The output is a set of edge pixels, not labeled parts.
+    \item Pattern recognition requires grouping, geometry, and positional reasoning.
+    \item This is the transition point from pure filtering to classical pattern recognition.
+  \end{itemize}
+  \vspace{9.75em}
+  \pipelinebox{edge pixels \;$\neq$\; object-level pattern understanding}
+\end{frame}
+
+\begin{frame}[t]{From Edges to Contours}
+  \justifying
+  \begin{columns}[T]
+    \column{0.3\linewidth}
+    \begin{itemize}
+      \item Neighboring edge pixels can be grouped into connected components.
+      \item Each connected component can be traced as a contour.
+      \item Contours define candidate regions that can be filtered by size, shape, and location.
+    \end{itemize}
+    \column{0.68\linewidth}
+    \imageorplaceholder{figures/contour_transition.png}{0.85\textheight}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[t]{Contour Features}
+  \justifying
+  \begin{columns}[T]
+    \column{0.3\linewidth}
+    \begin{itemize}
+      \item A contour is still only geometry, not meaning.
+      \item To use it for pattern recognition, we first measure its shape and location.
+      \item Bounding box, area, aspect ratio, centroid, and relative position turn pixels into features.
+    \end{itemize}
+    \column{0.68\linewidth}
+    \imageorplaceholder{figures/contour_feature_measurements.png}{0.85\textheight}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[t]{From Features to Pattern Rules}
+  \justifying
+  \begin{columns}[T]
+    \column{0.3\linewidth}
+    \begin{itemize}
+      \item Pattern recognition compares measured features with expected geometric rules.
+      \item No single contour is enough to identify a meaningful pattern.
+      \item A useful pattern usually needs shape, size, and position to agree.
+    \end{itemize}
+    \column{0.7\linewidth}
+    \imageorplaceholder{figures/pattern_rule_flow.png}{0.99\textheight}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[t]{Pattern Candidates Are Hypotheses}
+  \justifying
+  \begin{columns}[T]
+    \column{0.34\linewidth}
+    \begin{itemize}
+      \item Rule output should be treated as a candidate, not a final semantic label.
+      \item False positives are expected because background edges can satisfy simple geometry.
+      \item The next stage checks spatial consistency before interpretation.
+    \end{itemize}
+    \column{0.62\linewidth}
+    \imageorplaceholder{figures/pattern_candidate_hypotheses.png}{0.82\textheight}
+  \end{columns}
+\end{frame}
+
+
+
+\section{Facial Semantic Segmentation}
+\sectiondivider{Section IV: Facial Semantic Segmentation}{From geometric face-part candidates to semantic regions}
+
+\begin{frame}[t]{Facial Pattern Recognition Logic}
+  \justifying
+  \small
+  \begin{columns}[T]
+    \column{0.6\linewidth}
+    \begin{itemize}
+      \item Eyes: small, roughly symmetric horizontal regions in the upper face.
+      \item Nose: a central vertical structure in the middle facial zone.
+      \item Mouth: a wider horizontal contour in the lower face.
+      \item Face outline: the largest oval-like structure or a fallback ellipse.
+    \end{itemize}
+    \vspace{0.25em}
+    \begin{tabular}{p{0.24\linewidth} p{0.68\linewidth}}
+      \toprule
+      Facial part & Geometric cue \\
+      \midrule
+      Eyes & symmetry, horizontal aspect ratio, upper-half position \\
+      Nose & near-center position, vertical elongation \\
+      Mouth & lower-third position, wider contour \\
+      Face outline & large central region, oval-like support \\
+      \bottomrule
+    \end{tabular}
+    \column{0.4\linewidth}
+    \imageorplaceholder{figures/face_zone_map.png}{0.9\textheight}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[t]{Deterministic Face-Zone Partitioning}
+  \justifying
+  \begin{columns}[T]
+    \column{0.6\linewidth}
+    \begin{itemize}
+      \item After estimating a broad face region, the algorithm divides it into semantic zones.
+      \item Upper zone: eye and eyebrow candidates.
+      \item Central zone: nose candidate.
+      \item Lower zone: mouth candidate.
+      \item If contour evidence is weak, the system falls back to this deterministic geometry.
+    \end{itemize}
+    \column{0.4\linewidth}
+    \imageorplaceholder{figures/face_zone_ellipse_map.png}{0.99\textheight}
+  \end{columns}
+\end{frame}
+
+\begin{frame}[t]{Facial Part Segmentation Pipeline}
+    \vspace{2em}
+    \imageorplaceholder{figures/segmentation_pipeline_overview_v3.png}{0.99\textheight}
+\end{frame}
+
+\section{Demo and Evaluation}
+\sectiondivider{Section V: Demo and Evaluation}{A classroom-friendly Windows application for classical facial-part segmentation}
+
+\begin{frame}[t]{Demo Design}
+  \justifying
+  \begin{columns}[T]
+    \column{0.52\linewidth}
+    \begin{itemize}
+      \item The user selects a frontal face image from a Windows desktop GUI.
+      \item The application displays original, grayscale, edge map, and segmentation overlay panels.
+      \item The demo saves both intermediate outputs and a combined summary figure.
+    \end{itemize}
     \column{0.42\linewidth}
-    \begin{itemize}
-      \item Sobel uses two convolution kernels.
-      \item One estimates horizontal change.
-      \item One estimates vertical change.
-      \item The gradient magnitude highlights boundaries.
-    \end{itemize}
+    \pipelinebox{
+      Select Face Image\\[0.2em]
+      $\Downarrow$\\[0.2em]
+      Run Segmentation\\[0.2em]
+      $\Downarrow$\\[0.2em]
+      Save Results
+    }
   \end{columns}
 \end{frame}
 
-\begin{frame}[t]{Failure Case: Noise Corrupts Edges}
-  \centering
-  \includegraphics[width=0.94\linewidth,height=0.71\textheight,keepaspectratio]{../assets/generated/figures/camera_pipeline.png}
+
+\begin{frame}[t]{Additional Demo Cases}
+  \begin{columns}[T,onlytextwidth]
+  \column{0.33\linewidth}
+    \centering
+    \textbf{Biden Example}\\[0.2em]
+    \imageorplaceholder{figures/demo_biden_summary.png}{0.77\textheight}
+  \column{0.33\linewidth}
+    \centering
+    \textbf{Trump Example}\\[0.2em]
+    \imageorplaceholder{figures/demo_trump_summary.png}{0.7\textheight}
+  \column{0.33\linewidth}
+    \centering
+    \textbf{Obama Example}\\[0.2em]
+    \imageorplaceholder{figures/demo_summary.png}{0.77\textheight}
+  \end{columns}
 \end{frame}
 
-\begin{frame}[t]{Fix: Smooth Before Differentiating}
+\begin{frame}[t]{Failure Cases}
   \justifying
-  \small
   \begin{columns}[T]
-    \column{0.44\linewidth}
+    \column{0.3\linewidth}
     \begin{itemize}
-      \item Gaussian smoothing suppresses unstable high-frequency noise.
-      \item Sobel after smoothing recovers stronger large-scale boundaries.
-      \item Too much smoothing also erases weak detail.
+      \item Side faces violate the frontal-face assumption.
+      \item Glasses, beard, and hair occlusion disturb contour geometry.
+      \item Strong shadow changes the edge distribution.
+      \item Low resolution weakens local detail.
+      \item Complex backgrounds produce distracting contours.
+      \item Hair crossing the face can create false candidate regions.
     \end{itemize}
-    \column{0.53\linewidth}
-    \includegraphics[width=\linewidth,height=0.58\textheight,keepaspectratio]{../assets/generated/figures/coins_pipeline.png}
+    \column{0.7\linewidth}
+    \imageorplaceholder{figures/failure_cases_grid_v3.png}{0.99\textheight}
   \end{columns}
 \end{frame}
 
-\begin{frame}[t]{Canny as a Refined Pipeline}
-  \justifying
-  \small
-  \begin{columns}[T]
-    \column{0.48\linewidth}
-    \includegraphics[width=\linewidth,height=0.58\textheight,keepaspectratio]{../assets/generated/figures/astronaut_pipeline.png}
-    \column{0.46\linewidth}
-    \begin{itemize}
-      \item Canny combines smoothing, gradients, suppression, and thresholding.
-      \item It is stronger than raw Sobel.
-      \item But it still depends on the same filtering logic.
-    \end{itemize}
-  \end{columns}
-\end{frame}
 
-\begin{frame}[t]{Tradeoff Heatmap}
-  \justifying
-  \small
-  \centering
-  \includegraphics[width=0.74\linewidth,height=0.58\textheight,keepaspectratio]{../assets/generated/figures/tradeoff_heatmap.png}
-  \vspace{0.2em}
-  
-  Higher noise usually needs more smoothing, but oversmoothing removes useful edges.
-\end{frame}
-
-\begin{frame}{CNN and Diffusion Connection}
+\begin{frame}[t]{Conclusion}
   \justifying
   \begin{itemize}
-    \item Early CNN filters often learn edge-like patterns.
-    \item Diffusion models repeatedly remove noise from an image estimate.
-    \item Neither idea replaces classical filtering intuition.
-    \item They extend it.
+    \item Edge detection extracts low-level image structure.
+    \item Pattern recognition groups and interprets those structures.
+    \item Facial part segmentation is a natural next step after edge extraction and contour analysis.
+    \item Classical methods are excellent for explanation, but limited in real-world robustness.
   \end{itemize}
-\end{frame}
-
-\begin{frame}{Conclusion}
-  \justifying
-  \begin{itemize}
-    \item Edge detection is a filtering problem, not a black box.
-    \item Noise breaks naive derivatives because both noise and edges are high-frequency.
-    \item Pre-smoothing improves robustness, but detail is the cost.
-    \item The same logic carries forward into modern vision systems.
-  \end{itemize}
-\end{frame}
-
-\begin{frame}[t]{References}
-  \footnotesize
-  \begin{enumerate}
-    \item ECE 0402 course project guideline.
-    \item scikit-image: Canny edge detector.
-    \item scikit-image API: filters.
-    \item HIPR2: Sobel Edge Detector.
-    \item HIPR2: Canny Edge Detector.
-    \item B. P. Lathi, \textit{Linear Systems and Signals}.
-    \item Luis F. Chaparro, \textit{Signals and Systems Using MATLAB}.
-  \end{enumerate}
-\end{frame}
-
-\begin{frame}[t]{Team Responsibilities}
-  \small
-  \begin{tabular}{p{0.17\linewidth} p{0.29\linewidth} p{0.38\linewidth}}
-    \toprule
-    Member & Responsibility & Concrete Output \\
-    \midrule
-    Member A & Framing and references & Topic definition, slide story \\
-    Member B & Implementation & Python modules, figures \\
-    Member C & Validation & Heatmap analysis, checks \\
-    Member D & Delivery & Slide edits, narration, rehearsal \\
-    \bottomrule
-  \end{tabular}
 \end{frame}
 
 \end{document}

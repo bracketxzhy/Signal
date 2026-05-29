@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.8.12)  10 APR 2026 14:57
+This is pdfTeX, Version 3.141592653-2.6-1.40.27 (TeX Live 2025) (preloaded format=pdflatex 2025.8.12)  27 MAY 2026 16:05
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -721,32 +721,75 @@ Package: ragged2e 2023/06/22 v3.6 ragged2e Package
 \RaggedRightParindent=\skip78
 \JustifyingParindent=\skip79
 )
+(c:/texlive/2025/texmf-dist/tex/latex/tools/array.sty
+Package: array 2024/10/17 v2.6g Tabular extension package (FMi)
+\col@sep=\dimen308
+\ar@mcellbox=\box77
+\extrarowheight=\dimen309
+\NC@list=\toks46
+\extratabsurround=\skip80
+\backup@length=\skip81
+\ar@cellbox=\box78
+)
+(c:/texlive/2025/texmf-dist/tex/latex/caption/subcaption.sty
+Package: subcaption 2023/07/28 v1.6b Sub-captions (AR)
+
+(c:/texlive/2025/texmf-dist/tex/latex/caption/caption.sty
+Package: caption 2023/08/05 v3.6o Customizing captions (AR)
+
+(c:/texlive/2025/texmf-dist/tex/latex/caption/caption3.sty
+Package: caption3 2023/07/31 v2.4d caption3 kernel (AR)
+\caption@tempdima=\dimen310
+\captionmargin=\dimen311
+\caption@leftmargin=\dimen312
+\caption@rightmargin=\dimen313
+\caption@width=\dimen314
+\caption@indent=\dimen315
+\caption@parindent=\dimen316
+\caption@hangindent=\dimen317
+Package caption Info: beamer document class detected.
+
+(c:/texlive/2025/texmf-dist/tex/latex/caption/caption-beamer.sto
+File: caption-beamer.sto 2022/01/06 v2.0c Adaption of the caption package to th
+e beamer document classes (AR)
+))
+\c@caption@flags=\count349
+\c@continuedfloat=\count350
+Package caption Info: hyperref package is loaded.
+Package caption Info: Hyperref support is turned off
+(caption)             because hyperref has stopped early.
+)
+Package caption Info: New subtype `subfigure' on input line 238.
+\c@subfigure=\count351
+Package caption Info: New subtype `subtable' on input line 238.
+\c@subtable=\count352
+)
 (c:/texlive/2025/texmf-dist/tex/latex/l3backend/l3backend-pdftex.def
 File: l3backend-pdftex.def 2024-05-08 L3 backend support: PDF output (pdfTeX)
-\l__color_backend_stack_int=\count349
-\l__pdf_internal_box=\box77
+\l__color_backend_stack_int=\count353
+\l__pdf_internal_box=\box79
 )
 (./slides.aux)
 \openout1 = `slides.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 54.
-LaTeX Font Info:    ... okay on input line 54.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 54.
-LaTeX Font Info:    ... okay on input line 54.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 54.
-LaTeX Font Info:    ... okay on input line 54.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 54.
-LaTeX Font Info:    ... okay on input line 54.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 54.
-LaTeX Font Info:    ... okay on input line 54.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 54.
-LaTeX Font Info:    ... okay on input line 54.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 54.
-LaTeX Font Info:    ... okay on input line 54.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 54.
-LaTeX Font Info:    ... okay on input line 54.
-LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 54.
-LaTeX Font Info:    ... okay on input line 54.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 87.
+LaTeX Font Info:    ... okay on input line 87.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 87.
+LaTeX Font Info:    ... okay on input line 87.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 87.
+LaTeX Font Info:    ... okay on input line 87.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 87.
+LaTeX Font Info:    ... okay on input line 87.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 87.
+LaTeX Font Info:    ... okay on input line 87.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 87.
+LaTeX Font Info:    ... okay on input line 87.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 87.
+LaTeX Font Info:    ... okay on input line 87.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 87.
+LaTeX Font Info:    ... okay on input line 87.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 87.
+LaTeX Font Info:    ... okay on input line 87.
 
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
@@ -784,17 +827,17 @@ LaTeX Font Info:    ... okay on input line 54.
 
 (c:/texlive/2025/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count350
-\scratchdimen=\dimen308
-\scratchbox=\box78
-\nofMPsegments=\count351
-\nofMParguments=\count352
-\everyMPshowfont=\toks46
-\MPscratchCnt=\count353
-\MPscratchDim=\dimen309
-\MPnumerator=\count354
-\makeMPintoPDFobject=\count355
-\everyMPtoPDFconversion=\toks47
+\scratchcounter=\count354
+\scratchdimen=\dimen318
+\scratchbox=\box80
+\nofMPsegments=\count355
+\nofMParguments=\count356
+\everyMPshowfont=\toks47
+\MPscratchCnt=\count357
+\MPscratchDim=\dimen319
+\MPnumerator=\count358
+\makeMPintoPDFobject=\count359
+\everyMPtoPDFconversion=\toks48
 ) (c:/texlive/2025/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty
 Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
 Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
@@ -804,7 +847,7 @@ Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
-Package hyperref Info: Link coloring OFF on input line 54.
+Package hyperref Info: Link coloring OFF on input line 87.
 
 (./slides.out) (./slides.out)
 \@outlinefile=\write5
@@ -834,24 +877,31 @@ Dictionary: translator-numbers-dictionary, Language: English
 (c:/texlive/2025/texmf-dist/tex/latex/translator/translator-theorem-dictionary-
 English.dict
 Dictionary: translator-theorem-dictionary, Language: English 
-) (./slides.nav)
+)
+Package caption Info: Begin \AtBeginDocument code.
+Package caption Info: End \AtBeginDocument code.
+ (./slides.nav)
 
-LaTeX Font Warning: Font shape `OT1/cmss/m/n' in size <15> not available
-(Font)              size <14.4> substituted on input line 68.
+LaTeX Font Warning: Font shape `OT1/cmss/bx/n' in size <15.2> not available
+(Font)              size <14.4> substituted on input line 101.
+
+
+LaTeX Font Warning: Font shape `OT1/cmss/m/n' in size <13.2> not available
+(Font)              size <12> substituted on input line 101.
 
 
 
 [1
 
 {c:/texlive/2025/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
-LaTeX Font Info:    Trying to load font information for U+msa on input line 77.
-
+LaTeX Font Info:    Trying to load font information for U+msa on input line 114
+.
 
 (c:/texlive/2025/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Trying to load font information for U+msb on input line 77.
-
+LaTeX Font Info:    Trying to load font information for U+msb on input line 114
+.
 
 (c:/texlive/2025/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
@@ -860,92 +910,333 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 [2
 
 ]
-<../assets/generated/figures/image_gallery.png, id=28, 592.614pt x 605.462pt>
-File: ../assets/generated/figures/image_gallery.png Graphic file (type png)
-<use ../assets/generated/figures/image_gallery.png>
-Package pdftex.def Info: ../assets/generated/figures/image_gallery.png  used on
- input line 90.
-(pdftex.def)             Requested size: 118.42122pt x 120.98863pt.
-
 
 [3
 
- <../assets/generated/figures/image_gallery.png>]
-<../assets/generated/figures/sobel_kernels.png, id=37, 570.5315pt x 278.2395pt>
-
-File: ../assets/generated/figures/sobel_kernels.png Graphic file (type png)
-<use ../assets/generated/figures/sobel_kernels.png>
-Package pdftex.def Info: ../assets/generated/figures/sobel_kernels.png  used on
- input line 106.
-(pdftex.def)             Requested size: 214.39276pt x 104.55608pt.
-
+]
 
 [4
 
- <../assets/generated/figures/sobel_kernels.png>]
-<../assets/generated/figures/camera_pipeline.png, id=44, 833.1125pt x 570.13pt>
-
-File: ../assets/generated/figures/camera_pipeline.png Graphic file (type png)
-<use ../assets/generated/figures/camera_pipeline.png>
-Package pdftex.def Info: ../assets/generated/figures/camera_pipeline.png  used 
-on input line 111.
-(pdftex.def)             Requested size: 261.52925pt x 178.97424pt.
-
+]
 
 [5
 
- <../assets/generated/figures/camera_pipeline.png>]
-<../assets/generated/figures/coins_pipeline.png, id=51, 859.6115pt x 540.8205pt
->
-File: ../assets/generated/figures/coins_pipeline.png Graphic file (type png)
-<use ../assets/generated/figures/coins_pipeline.png>
-Package pdftex.def Info: ../assets/generated/figures/coins_pipeline.png  used o
-n input line 126.
-(pdftex.def)             Requested size: 206.58643pt x 129.97285pt.
+]
+Overfull \hbox (10.09334pt too wide) detected at line 164
+\OML/cmm/m/it/10 I\OT1/cmr/m/n/10 [\OML/cmm/m/it/10 m; n\OT1/cmr/m/n/10 ]\OML/c
+mm/m/it/10 ;  m \OT1/cmr/m/n/10 = 0\OML/cmm/m/it/10 ; [] ; M \OMS/cmsy/m/n/10 ^
+^@ \OT1/cmr/m/n/10 1\OML/cmm/m/it/10 ;  n \OT1/cmr/m/n/10 = 0\OML/cmm/m/it/10 ;
+ [] ; N \OMS/cmsy/m/n/10 ^^@ \OT1/cmr/m/n/10 1
+ []
+
+<figures/image_gallery.png, id=70, 592.614pt x 605.462pt>
+File: figures/image_gallery.png Graphic file (type png)
+<use figures/image_gallery.png>
+Package pdftex.def Info: figures/image_gallery.png  used on input line 164.
+(pdftex.def)             Requested size: 194.89407pt x 199.11942pt.
 
 
 [6
 
- <../assets/generated/figures/coins_pipeline.png>]
-<../assets/generated/figures/astronaut_pipeline.png, id=58, 833.1125pt x 570.13
-pt>
-File: ../assets/generated/figures/astronaut_pipeline.png Graphic file (type png
-)
-<use ../assets/generated/figures/astronaut_pipeline.png>
-Package pdftex.def Info: ../assets/generated/figures/astronaut_pipeline.png  us
-ed on input line 141.
-(pdftex.def)             Requested size: 187.09898pt x 128.03882pt.
+ <./figures/image_gallery.png>]
+<figures/2d_convolution_diagram.png, id=78, 582.978pt x 221.628pt>
+File: figures/2d_convolution_diagram.png Graphic file (type png)
+<use figures/2d_convolution_diagram.png>
+Package pdftex.def Info: figures/2d_convolution_diagram.png  used on input line
+ 182.
+(pdftex.def)             Requested size: 305.00946pt x 115.95401pt.
+
+Overfull \vbox (4.3086pt too high) detected at line 182
+ []
+
 
 
 [7
 
- <../assets/generated/figures/astronaut_pipeline.png>]
-<../assets/generated/figures/tradeoff_heatmap.png, id=66, 512.314pt x 324.0105p
-t>
-File: ../assets/generated/figures/tradeoff_heatmap.png Graphic file (type png)
-<use ../assets/generated/figures/tradeoff_heatmap.png>
-Package pdftex.def Info: ../assets/generated/figures/tradeoff_heatmap.png  used
- on input line 151.
-(pdftex.def)             Requested size: 231.17236pt x 146.20383pt.
+ <./figures/2d_convolution_diagram.png>]
+<figures/gaussian_original.png, id=86, 301.125pt x 301.125pt>
+File: figures/gaussian_original.png Graphic file (type png)
+<use figures/gaussian_original.png>
+Package pdftex.def Info: figures/gaussian_original.png  used on input line 213.
+
+(pdftex.def)             Requested size: 100.8281pt x 100.8281pt.
+<figures/gaussian_smoothed.png, id=87, 301.125pt x 301.125pt>
+File: figures/gaussian_smoothed.png Graphic file (type png)
+<use figures/gaussian_smoothed.png>
+Package pdftex.def Info: figures/gaussian_smoothed.png  used on input line 213.
+
+(pdftex.def)             Requested size: 100.8281pt x 100.8281pt.
+<figures/gaussian_enhanced.png, id=88, 301.125pt x 301.125pt>
+File: figures/gaussian_enhanced.png Graphic file (type png)
+<use figures/gaussian_enhanced.png>
+Package pdftex.def Info: figures/gaussian_enhanced.png  used on input line 213.
+
+(pdftex.def)             Requested size: 100.8281pt x 100.8281pt.
+
+Overfull \vbox (9.54372pt too high) detected at line 213
+ []
+
 
 
 [8
 
- <../assets/generated/figures/tradeoff_heatmap.png>]
+ <./figures/gaussian_original.png (PNG copy)> <./figures/gaussian_smoothed.png 
+(PNG copy)> <./figures/gaussian_enhanced.png (PNG copy)>]
 
 [9
 
 ]
+<figures/filtering_concept.png, id=101, 470.1565pt x 426.393pt>
+File: figures/filtering_concept.png Graphic file (type png)
+<use figures/filtering_concept.png>
+Package pdftex.def Info: figures/filtering_concept.png  used on input line 234.
+
+(pdftex.def)             Requested size: 233.88678pt x 212.11594pt.
+
+Overfull \vbox (10.88713pt too high) detected at line 234
+ []
+
+
 
 [10
 
-]
+ <./figures/filtering_concept.png>]
+<figures/gaussian_kernel_panel.png, id=108, 250.9375pt x 441.2485pt>
+File: figures/gaussian_kernel_panel.png Graphic file (type png)
+<use figures/gaussian_kernel_panel.png>
+Package pdftex.def Info: figures/gaussian_kernel_panel.png  used on input line 
+265.
+(pdftex.def)             Requested size: 121.85387pt x 214.26784pt.
+
+Overfull \vbox (1.03903pt too high) detected at line 265
+ []
+
+
 
 [11
 
-]
+ <./figures/gaussian_kernel_panel.png>]
+<figures/sobel_kernels.png, id=117, 254.1495pt x 440.4455pt>
+File: figures/sobel_kernels.png Graphic file (type png)
+<use figures/sobel_kernels.png>
+Package pdftex.def Info: figures/sobel_kernels.png  used on input line 306.
+(pdftex.def)             Requested size: 123.63852pt x 214.2677pt.
+
+Overfull \vbox (1.0389pt too high) detected at line 306
+ []
+
+
 
 [12
+
+ <./figures/sobel_kernels.png>]
+<figures/astronaut_sobel_gx.png, id=124, 316.18124pt x 316.18124pt>
+File: figures/astronaut_sobel_gx.png Graphic file (type png)
+<use figures/astronaut_sobel_gx.png>
+Package pdftex.def Info: figures/astronaut_sobel_gx.png  used on input line 335
+.
+(pdftex.def)             Requested size: 120.838pt x 120.83519pt.
+<figures/astronaut_sobel_gy.png, id=125, 316.18124pt x 316.18124pt>
+File: figures/astronaut_sobel_gy.png Graphic file (type png)
+<use figures/astronaut_sobel_gy.png>
+Package pdftex.def Info: figures/astronaut_sobel_gy.png  used on input line 335
+.
+(pdftex.def)             Requested size: 120.838pt x 120.83519pt.
+<figures/astronaut_sobel_g.png, id=126, 316.18124pt x 316.18124pt>
+File: figures/astronaut_sobel_g.png Graphic file (type png)
+<use figures/astronaut_sobel_g.png>
+Package pdftex.def Info: figures/astronaut_sobel_g.png  used on input line 335.
+
+(pdftex.def)             Requested size: 120.838pt x 120.83519pt.
+
+
+[13
+
+ <./figures/astronaut_sobel_gx.png> <./figures/astronaut_sobel_gy.png> <./figur
+es/astronaut_sobel_g.png>]
+<figures/astronaut_pipeline.png, id=138, 833.1125pt x 570.13pt>
+File: figures/astronaut_pipeline.png Graphic file (type png)
+<use figures/astronaut_pipeline.png>
+Package pdftex.def Info: figures/astronaut_pipeline.png  used on input line 352
+.
+(pdftex.def)             Requested size: 265.06326pt x 181.39268pt.
+
+
+[14
+
+ <./figures/astronaut_pipeline.png>]
+<figures/rgb_edge_pipeline.png, id=145, 678.9365pt x 389.455pt>
+File: figures/rgb_edge_pipeline.png Graphic file (type png)
+<use figures/rgb_edge_pipeline.png>
+Package pdftex.def Info: figures/rgb_edge_pipeline.png  used on input line 363.
+
+(pdftex.def)             Requested size: 329.57387pt x 189.05183pt.
+
+
+[15
+
+ <./figures/rgb_edge_pipeline.png>]
+
+[16
+
+]
+
+[17
+
+]
+<figures/contour_transition.png, id=162, 474.1715pt x 453.2935pt>
+File: figures/contour_transition.png Graphic file (type png)
+<use figures/contour_transition.png>
+Package pdftex.def Info: figures/contour_transition.png  used on input line 392
+.
+(pdftex.def)             Requested size: 224.13403pt x 214.2653pt.
+
+Overfull \vbox (1.0365pt too high) detected at line 392
+ []
+
+
+
+[18
+
+ <./figures/contour_transition.png>]
+<figures/contour_feature_measurements.png, id=169, 435.6275pt x 463.7325pt>
+File: figures/contour_feature_measurements.png Graphic file (type png)
+<use figures/contour_feature_measurements.png>
+Package pdftex.def Info: figures/contour_feature_measurements.png  used on inpu
+t line 406.
+(pdftex.def)             Requested size: 201.2818pt x 214.26772pt.
+
+Overfull \vbox (1.03891pt too high) detected at line 406
+ []
+
+
+
+[19
+
+ <./figures/contour_feature_measurements.png>]
+<figures/pattern_rule_flow.png, id=177, 421.575pt x 314.776pt>
+File: figures/pattern_rule_flow.png Graphic file (type png)
+<use figures/pattern_rule_flow.png>
+Package pdftex.def Info: figures/pattern_rule_flow.png  used on input line 420.
+
+(pdftex.def)             Requested size: 272.86261pt x 203.73741pt.
+
+Overfull \vbox (2.5086pt too high) detected at line 420
+ []
+
+
+
+[20
+
+ <./figures/pattern_rule_flow.png>]
+<figures/pattern_candidate_hypotheses.png, id=184, 402.7045pt x 402.7045pt>
+File: figures/pattern_candidate_hypotheses.png Graphic file (type png)
+<use figures/pattern_candidate_hypotheses.png>
+Package pdftex.def Info: figures/pattern_candidate_hypotheses.png  used on inpu
+t line 434.
+(pdftex.def)             Requested size: 206.6977pt x 206.6977pt.
+
+
+[21
+
+ <./figures/pattern_candidate_hypotheses.png>]
+
+[22
+
+]
+Overfull \hbox (5.28882pt too wide) in paragraph at lines 466--466
+[]  
+ []
+
+<figures/face_zone_map.png, id=197, 426.393pt x 570.933pt>
+File: figures/face_zone_map.png Graphic file (type png)
+<use figures/face_zone_map.png>
+Package pdftex.def Info: figures/face_zone_map.png  used on input line 466.
+(pdftex.def)             Requested size: 155.91516pt x 208.76776pt.
+
+Overfull \vbox (5.9834pt too high) detected at line 466
+ []
+
+
+
+[23
+
+ <./figures/face_zone_map.png>]
+<figures/face_zone_ellipse_map.png, id=204, 903.375pt x 1204.5pt>
+File: figures/face_zone_ellipse_map.png Graphic file (type png)
+<use figures/face_zone_ellipse_map.png>
+Package pdftex.def Info: figures/face_zone_ellipse_map.png  used on input line 
+482.
+(pdftex.def)             Requested size: 155.91505pt x 207.88675pt.
+
+Overfull \vbox (6.65794pt too high) detected at line 482
+ []
+
+
+
+[24
+
+ <./figures/face_zone_ellipse_map.png>]
+<figures/segmentation_pipeline_overview_v3.png, id=211, 1134.639pt x 495.0495pt
+>
+File: figures/segmentation_pipeline_overview_v3.png Graphic file (type png)
+<use figures/segmentation_pipeline_overview_v3.png>
+Package pdftex.def Info: figures/segmentation_pipeline_overview_v3.png  used on
+ input line 487.
+(pdftex.def)             Requested size: 389.80614pt x 170.07463pt.
+
+
+[25
+
+ <./figures/segmentation_pipeline_overview_v3.png>]
+
+[26
+
+]
+
+[27
+
+]
+<figures/demo_biden_summary.png, id=229, 1284.8pt x 1606.0pt>
+File: figures/demo_biden_summary.png Graphic file (type png)
+<use figures/demo_biden_summary.png>
+Package pdftex.def Info: figures/demo_biden_summary.png  used on input line 528
+.
+(pdftex.def)             Requested size: 128.62476pt x 160.78094pt.
+<figures/demo_trump_summary.png, id=230, 1284.8pt x 1626.075pt>
+File: figures/demo_trump_summary.png Graphic file (type png)
+<use figures/demo_trump_summary.png>
+Package pdftex.def Info: figures/demo_trump_summary.png  used on input line 528
+.
+(pdftex.def)             Requested size: 128.62476pt x 162.79071pt.
+<figures/demo_summary.png, id=231, 1284.8pt x 1603.9925pt>
+File: figures/demo_summary.png Graphic file (type png)
+<use figures/demo_summary.png>
+Package pdftex.def Info: figures/demo_summary.png  used on input line 528.
+(pdftex.def)             Requested size: 128.62476pt x 160.57997pt.
+
+
+[28
+
+ <./figures/demo_biden_summary.png (PNG copy)> <./figures/demo_trump_summary.pn
+g (PNG copy)> <./figures/demo_summary.png (PNG copy)>]
+<figures/failure_cases_grid_v3.png, id=237, 1023.825pt x 762.85pt>
+File: figures/failure_cases_grid_v3.png Graphic file (type png)
+<use figures/failure_cases_grid_v3.png>
+Package pdftex.def Info: figures/failure_cases_grid_v3.png  used on input line 
+545.
+(pdftex.def)             Requested size: 272.85893pt x 203.30666pt.
+
+Overfull \vbox (2.07785pt too high) detected at line 545
+ []
+
+
+
+[29
+
+ <./figures/failure_cases_grid_v3.png (PNG copy)>]
+
+[30
 
 ]
 \tf@nav=\write6
@@ -965,30 +1256,38 @@ L3 programming layer <2025-01-18>
 
 
 LaTeX Font Warning: Size substitutions with differences
-(Font)              up to 0.6pt have occurred.
+(Font)              up to 1.2pt have occurred.
 
 Package rerunfilecheck Info: File `slides.out' has not changed.
-(rerunfilecheck)             Checksum: D41D8CD98F00B204E9800998ECF8427E;0.
+(rerunfilecheck)             Checksum: EA73C038C50B5D53C31283F92F0CB061;688.
  ) 
 Here is how much of TeX's memory you used:
- 21597 strings out of 473190
- 413675 string characters out of 5719979
- 783740 words of memory out of 5000000
- 44381 multiletter control sequences out of 15000+600000
- 565942 words of font info for 62 fonts, out of 8000000 for 9000
+ 23452 strings out of 473190
+ 450689 string characters out of 5719979
+ 814491 words of memory out of 5000000
+ 46177 multiletter control sequences out of 15000+600000
+ 568486 words of font info for 73 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 128i,11n,123p,381b,628s stack positions out of 10000i,1000n,20000p,200000b,200000s
-<c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmss10.pfb><c:/tex
-live/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmss12.pfb><c:/texlive/2025
-/texmf-dist/fonts/type1/public/amsfonts/cm/cmss8.pfb><c:/texlive/2025/texmf-dis
-t/fonts/type1/public/amsfonts/cm/cmss9.pfb><c:/texlive/2025/texmf-dist/fonts/ty
-pe1/public/amsfonts/cm/cmssbx10.pfb><c:/texlive/2025/texmf-dist/fonts/type1/pub
-lic/amsfonts/cm/cmssi8.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfo
-nts/cm/cmsy9.pfb>
-Output written on slides.pdf (12 pages, 7845754 bytes).
+ 128i,12n,123p,381b,742s stack positions out of 10000i,1000n,20000p,200000b,200000s
+<c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb><c:/tex
+live/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb><c:/texlive/2025
+/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb><c:/texlive/2025/texmf-dis
+t/fonts/type1/public/amsfonts/cm/cmmi6.pfb><c:/texlive/2025/texmf-dist/fonts/ty
+pe1/public/amsfonts/cm/cmmi7.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public
+/amsfonts/cm/cmmi8.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/
+cm/cmr10.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pf
+b><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb><c:/texli
+ve/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmss10.pfb><c:/texlive/2025/t
+exmf-dist/fonts/type1/public/amsfonts/cm/cmss12.pfb><c:/texlive/2025/texmf-dist
+/fonts/type1/public/amsfonts/cm/cmss8.pfb><c:/texlive/2025/texmf-dist/fonts/typ
+e1/public/amsfonts/cm/cmss9.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/
+amsfonts/cm/cmssbx10.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfont
+s/cm/cmsy10.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy
+7.pfb><c:/texlive/2025/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy9.pfb>
+Output written on slides.pdf (30 pages, 16102042 bytes).
 PDF statistics:
- 133 PDF objects out of 1000 (max. 8388607)
- 86 compressed objects within 1 object stream
- 25 named destinations out of 1000 (max. 500000)
- 73 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 336 PDF objects out of 1000 (max. 8388607)
+ 220 compressed objects within 3 object streams
+ 66 named destinations out of 1000 (max. 500000)
+ 203 words of extra memory for PDF output out of 10000 (max. 10000000)
 

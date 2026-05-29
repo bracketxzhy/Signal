@@ -32,14 +32,28 @@ def compile_tex(tex_path: Path, passes: int = 2) -> Path:
     return tex_path.with_suffix(".pdf")
 
 
+def run_slide_figure_generator() -> None:
+    subprocess.run(
+        [sys.executable, str(ROOT / "scripts" / "generate_slide_figures.py")],
+        cwd=ROOT,
+        check=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        text=True,
+    )
+
+
 def main() -> None:
     result = build_project_outputs()
-    report_pdf = compile_tex(ROOT / "docs" / "project_report.tex")
+    run_slide_figure_generator()
+    report_tex = ROOT / "docs" / "project_report.tex"
+    report_pdf = compile_tex(report_tex) if report_tex.exists() else None
     slides_pdf = compile_tex(ROOT / "slides" / "slides.tex")
     print("Build complete.")
     for artifact in result["artifacts"]:
         print(f" - {artifact}")
-    print(f" - {report_pdf.relative_to(ROOT).as_posix()}")
+    if report_pdf is not None:
+        print(f" - {report_pdf.relative_to(ROOT).as_posix()}")
     print(f" - {slides_pdf.relative_to(ROOT).as_posix()}")
 
 
