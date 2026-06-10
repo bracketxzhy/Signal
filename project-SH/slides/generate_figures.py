@@ -242,6 +242,41 @@ def two_variable_surface() -> None:
     save(img, "two_variable_surface.png")
 
 
+def two_variable_basis_functions() -> None:
+    modes = [
+        (1, 1, "two_variable_basis_n1.png"),
+        (1, 2, "two_variable_basis_n2.png"),
+        (1, 3, "two_variable_basis_n3.png"),
+        (1, 4, "two_variable_basis_n4.png"),
+    ]
+    for m, n, name in modes:
+        img, draw = canvas(760, 560)
+
+        def basis(x, y, mx=m, ny=n):
+            return 0.9 * math.cos(mx * x) * math.cos(ny * y)
+
+        draw_surface(
+            draw,
+            basis,
+            center=(380, 305),
+            scale=58,
+            nx=54,
+            ny=54,
+            zrange=(-1.0, 1.0),
+        )
+        draw_3d_axes(
+            draw,
+            center=(380, 305),
+            scale=58,
+            x0=-3.2,
+            y0=-3.2,
+            z0=-1.05,
+            length=6.5,
+            height=2.45,
+        )
+        save(img, name, pad=8)
+
+
 def two_variable_fit_grid() -> None:
     img, draw = canvas(1200, 820)
     def target(x, y):
@@ -562,6 +597,7 @@ def main() -> None:
     square_wave_approximation()
     polar_dumbbell()
     two_variable_surface()
+    two_variable_basis_functions()
     two_variable_fit_grid()
     sh_basis_grid()
     sh_coefficient_projection()

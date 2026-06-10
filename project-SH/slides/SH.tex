@@ -224,6 +224,36 @@ f(x,y)\approx
 \]
 \end{frame}
 
+\begin{frame}{Basis Functions of a Two-Variable Fourier Series}
+\begin{figure}
+\centering
+\begin{subfigure}{0.23\textwidth}
+\centering
+\imageorplaceholder{figures/two_variable_basis_n1.png}{0.53\textheight}
+\caption{$\cos(x)\cos(y)$}
+\end{subfigure}
+\hfill
+\begin{subfigure}{0.23\textwidth}
+\centering
+\imageorplaceholder{figures/two_variable_basis_n2.png}{0.53\textheight}
+\caption{$\cos(x)\cos(2y)$}
+\end{subfigure}
+\hfill
+\begin{subfigure}{0.23\textwidth}
+\centering
+\imageorplaceholder{figures/two_variable_basis_n3.png}{0.53\textheight}
+\caption{$\cos(x)\cos(3y)$}
+\end{subfigure}
+\hfill
+\begin{subfigure}{0.23\textwidth}
+\centering
+\imageorplaceholder{figures/two_variable_basis_n4.png}{0.53\textheight}
+\caption{$\cos(x)\cos(4y)$}
+\end{subfigure}
+\caption{Basis surfaces with increasing frequency in the $y$ direction}
+\end{figure}
+\end{frame}
+
  \begin{frame}{Two-Variable Fourier Series for Surface Signals}
 \begin{columns}
 \column{0.5\textwidth}
@@ -614,7 +644,7 @@ where $T_i$ represents accumulated transmittance from previously blended Gaussia
 \begin{figure}
 \centering
 \imageorplaceholder{figures/000050_overlay.png}{0.8\textheight}
-\caption{Front novel view with directional color}
+\caption{Novel view with directional color}
 \end{figure}
 \end{center}
 
@@ -622,8 +652,8 @@ where $T_i$ represents accumulated transmittance from previously blended Gaussia
 \begin{center}
 \begin{figure}
 \centering
-\imageorplaceholder{figures/000060_overlay.png}{0.8\textheight}
-\caption{Back novel view with directional color}
+\imageorplaceholder{figures/000022_overlay.png}{0.8\textheight}
+\caption{Novel view with directional color}
 \end{figure}
 \end{center}
 \end{columns}
@@ -665,6 +695,21 @@ where $T_i$ represents accumulated transmittance from previously blended Gaussia
     \item In 3D Gaussian Splatting, SH coefficients are used to model view-dependent RGB color.
     \item The panorama demo illustrates how increasing the SH order improves directional signal reconstruction.
   \end{itemize}
+\end{frame}
+
+\begin{frame}[t]{Team Members and Responsibilities}
+\centering
+\begin{tabular}{l l}
+\toprule
+\textbf{Name} & \textbf{Role / Contribution} \\
+\midrule
+Heyang Zhang & Presentation, Code Integration \\
+Dexi Liu & Research on 3D Gaussian Splatting, Data Preparation \\
+Shuyu Wang & Demo Implementation, Visualization \\
+Hongwei Zeng & Analysis of Directional Color Signals, Slide Preparation \\
+Rui Wang  & Supporting Research, Literature Review, Figures Preparation \\
+\bottomrule
+\end{tabular}
 \end{frame}
 
 \end{document}

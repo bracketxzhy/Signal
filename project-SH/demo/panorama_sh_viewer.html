@@ -324,7 +324,9 @@
 
         <div class="degree-row">
           <div class="degree-control">
-            <label for="degree" class="degree-title">Reconstruction degree</label>
+            <label for="degree" class="degree-title"
+              >Reconstruction degree</label
+            >
             <div class="degree-slider-row">
               <input
                 id="degree"
@@ -394,7 +396,7 @@
 
       const TARGET_WIDTH = 768;
       const TARGET_HEIGHT = 384;
-      const MAX_L = 80;
+      const MAX_L = 150;
       const TILE_GRID = 4;
       const TILE_OVERLAP = 0.1;
       const WORKER_COUNT = 8;
@@ -917,8 +919,7 @@
         queuedDegree = Math.max(0, Math.min(fitted.maxL, Number(value)));
         degreeSlider.value = String(queuedDegree);
         degreeLabel.textContent = `L=${queuedDegree}/${fitted.maxL}`;
-        reconCaption.textContent =
-          `Piecewise SH reconstruction. Local degree ${queuedDegree}. Click to inspect as a 360 view.`;
+        reconCaption.textContent = `Piecewise SH reconstruction. Local degree ${queuedDegree}. Click to inspect as a 360 view.`;
 
         if (renderBusy) return;
         renderBusy = true;

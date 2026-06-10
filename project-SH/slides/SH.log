@@ -1,4 +1,4 @@
-This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.8.12)  29 MAY 2026 17:31
+This is XeTeX, Version 3.141592653-2.6-0.999997 (TeX Live 2025) (preloaded format=xelatex 2025.8.12)  3 JUN 2026 09:48
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -702,7 +702,11 @@ Package hyperref Info: Link coloring OFF on input line 88.
 \@outlinefile=\write5
 \openout5 = `SH.out'.
 
- (c:/texlive/2025/texmf-dist/tex/latex/translator/translator-basic-dictionary-English.dict
+
+
+Package hyperref Warning: Rerun to get /PageLabels entry.
+
+(c:/texlive/2025/texmf-dist/tex/latex/translator/translator-basic-dictionary-English.dict
 Dictionary: translator-basic-dictionary, Language: English 
 ) (c:/texlive/2025/texmf-dist/tex/latex/translator/translator-bibliography-dictionary-English.dict
 Dictionary: translator-bibliography-dictionary, Language: English 
@@ -815,31 +819,44 @@ File: figures/polar_dumbbell_r_costheta.png Graphic file (type bmp)
 [8
 
 ]
+File: figures/two_variable_basis_n1.png Graphic file (type bmp)
+<figures/two_variable_basis_n1.png>
+File: figures/two_variable_basis_n2.png Graphic file (type bmp)
+<figures/two_variable_basis_n2.png>
+File: figures/two_variable_basis_n3.png Graphic file (type bmp)
+<figures/two_variable_basis_n3.png>
+File: figures/two_variable_basis_n4.png Graphic file (type bmp)
+<figures/two_variable_basis_n4.png>
+
+
+[9
+
+]
 File: figures/two_variable_surface.png Graphic file (type bmp)
 <figures/two_variable_surface.png>
 File: figures/two_variable_fit_grid.png Graphic file (type bmp)
 <figures/two_variable_fit_grid.png>
 
 
-[9
+[10
 
 ]
 
-[10
+[11
 
 ]
 File: figures/spherical_coordinates.png Graphic file (type bmp)
 <figures/spherical_coordinates.png>
 
 
-[11
-
-]
-
 [12
 
 ]
-Overfull \hbox (18.11769pt too wide) detected at line 376
+
+[13
+
+]
+Overfull \hbox (18.11769pt too wide) detected at line 406
 \OML/cmm/m/it/9 Y[]\OT1/cmr/m/n/9 (\OML/cmm/m/it/9 ^^R; '\OT1/cmr/m/n/9 ) = []
  []
 
@@ -847,36 +864,36 @@ File: figures/sh_basis_grid.png Graphic file (type bmp)
 <figures/sh_basis_grid.png>
 
 
-[13
+[14
 
 ]
 File: figures/sh_coefficient_projection.png Graphic file (type bmp)
 <figures/sh_coefficient_projection.png>
 
 
-[14
+[15
 
 ]
 File: figures/sh_approximation_grid.png Graphic file (type bmp)
 <figures/sh_approximation_grid.png>
 
-Overfull \vbox (9.15793pt too high) detected at line 411
+Overfull \vbox (9.15793pt too high) detected at line 441
  []
 
 
 
-[15
+[16
 
 ]
 
-[16
+[17
 
 ]
 File: figures/color_as_signal_grayscale.png Graphic file (type bmp)
 <figures/color_as_signal_grayscale.png>
 
 
-[17
+[18
 
 ]
 File: figures/directional_distance_signal_custom.png Graphic file (type bmp)
@@ -885,10 +902,10 @@ File: figures/color_mapped_directional_signal.png Graphic file (type bmp)
 <figures/color_mapped_directional_signal.png>
 
 
-[18
+[19
 
 ]
-Overfull \hbox (11.56296pt too wide) detected at line 508
+Overfull \hbox (11.56296pt too wide) detected at line 538
 \OML/cmm/m/it/10 C\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 ^^R; ^^^\OT1/cmr/m/n/10 ) = []\OML/cmm/m/it/10 R\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 ^^R; ^^^\OT1/cmr/m/n/10 )\OML/cmm/m/it/10 ; G\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 ^^R; ^^^\OT1/cmr/m/n/10 )\OML/cmm/m/it/10 ; B\OT1/cmr/m/n/10 (\OML/cmm/m/it/10 ^^R; ^^^\OT1/cmr/m/n/10 )[]
  []
 
@@ -896,51 +913,43 @@ File: figures/multichannel_directional_signal_custom.png Graphic file (type bmp)
 <figures/multichannel_directional_signal_custom.png>
 
 
-[19
+[20
 
 ]
 
-[20
+[21
 
 ]
 File: figures/sh_color_six_views.png Graphic file (type bmp)
 <figures/sh_color_six_views.png>
 
 
-[21
+[22
 
 ]
 File: figures/gaussian_ellipsoid_six_views.png Graphic file (type bmp)
 <figures/gaussian_ellipsoid_six_views.png>
 
 
-[22
+[23
 
 ]
 
-[23
+[24
 
 ]
 File: figures/3dgs_pipeline_fig2_original.png Graphic file (type bmp)
 <figures/3dgs_pipeline_fig2_original.png>
 
 
-[24
+[25
 
 ]
 File: figures/000050_overlay.png Graphic file (type bmp)
 <figures/000050_overlay.png>
-File: figures/000060_overlay.png Graphic file (type bmp)
-<figures/000060_overlay.png>
+File: figures/000022_overlay.png Graphic file (type bmp)
+<figures/000022_overlay.png>
 
-Overfull \vbox (6.91187pt too high) detected at line 630
- []
-
-
-
-[25
-
-]
 
 [26
 
@@ -951,6 +960,14 @@ Overfull \vbox (6.91187pt too high) detected at line 630
 ]
 
 [28
+
+]
+
+[29
+
+]
+
+[30
 
 ]
 \tf@nav=\write6
@@ -976,12 +993,12 @@ Package rerunfilecheck Info: File `SH.out' has not changed.
 (rerunfilecheck)             Checksum: 4FAE62610C6CAB3CB8942CCF9DD3C717;851.
  ) 
 Here is how much of TeX's memory you used:
- 23132 strings out of 473832
- 446397 string characters out of 5733158
- 809053 words of memory out of 5000000
- 45690 multiletter control sequences out of 15000+600000
- 575548 words of font info for 112 fonts, out of 8000000 for 9000
+ 23187 strings out of 473832
+ 448134 string characters out of 5733158
+ 808446 words of memory out of 5000000
+ 45740 multiletter control sequences out of 15000+600000
+ 575556 words of font info for 113 fonts, out of 8000000 for 9000
  1348 hyphenation exceptions out of 8191
  128i,12n,123p,411b,841s stack positions out of 10000i,1000n,20000p,200000b,200000s
 
-Output written on SH.pdf (28 pages).
+Output written on SH.pdf (30 pages).
